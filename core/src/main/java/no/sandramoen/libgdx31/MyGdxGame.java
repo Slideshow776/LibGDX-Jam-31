@@ -1,0 +1,18 @@
+package no.sandramoen.libgdx31;
+
+
+import no.sandramoen.libgdx31.screens.gameplay.LevelScreen;
+import no.sandramoen.libgdx31.utils.AssetLoader;
+import no.sandramoen.libgdx31.utils.BaseGame;
+
+public class MyGdxGame extends BaseGame {
+
+	@Override
+	public void create() {
+		super.create();
+		// setActiveScreen(new SplashScreen());
+		// setActiveScreen(new MenuScreen());
+		setActiveScreen(new LevelScreen(AssetLoader.testMap));
+	}
+}
+
