@@ -41,7 +41,7 @@ public class Lwjgl3Launcher {
         if (isFullscreen)
             configuration.setFullscreenMode(Lwjgl3ApplicationConfiguration.getDisplayMode());
         else
-            setWindowedMode(.6f, configuration);
+            setWindowedMode(.25f, configuration);
         return configuration;
     }
 
@@ -55,7 +55,7 @@ public class Lwjgl3Launcher {
         Dimension dimension = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         int width = (int) (dimension.width * percentOfScreenSize);
 
-        float aspectRatio = 16 / 9f;
+        float aspectRatio = 9 / 16f;
         int height = (int) (width / aspectRatio);
 
         System.out.println("[DesktopLauncher] Window dimensions => width: " + width + ", height: " + height);
