@@ -10,21 +10,26 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import space.earlygrey.shapedrawer.ShapeDrawer;
+
 public abstract class BaseScreen implements Screen, InputProcessor {
     protected Stage mainStage;
+    protected ShapeDrawer shapeDrawer;
     protected Stage uiStage;
     protected Table uiTable;
     private boolean pause;
 
     public BaseScreen() {
         mainStage = new Stage();
-        mainStage.setViewport(new ExtendViewport(80, 45));
+        mainStage.setViewport(new ExtendViewport(9, 16));
 
         uiTable = new Table();
         uiTable.setFillParent(true);
         uiStage = new Stage();
         uiStage.setViewport(new ScreenViewport());
         uiStage.addActor(uiTable);
+
+        shapeDrawer = new ShapeDrawer(mainStage.getBatch(), AssetLoader.textureAtlas.findRegion("whitePixel"));
 
         initialize();
     }
@@ -41,7 +46,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
             update(delta);
         }
 
-        Gdx.gl.glClearColor(0.0f, 0.0f, 1.0f, 1f);
+        Gdx.gl.glClearColor(0.6f, 0.2f, 0.4f, 1f);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         mainStage.getViewport().apply();

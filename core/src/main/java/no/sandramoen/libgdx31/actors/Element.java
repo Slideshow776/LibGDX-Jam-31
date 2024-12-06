@@ -1,30 +1,33 @@
 package no.sandramoen.libgdx31.actors;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 
-import no.sandramoen.libgdx31.actors.map.TiledMapActor;
 import no.sandramoen.libgdx31.utils.BaseActor;
+import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
 public class Element extends BaseActor {
+
+
     public boolean isDead;
     public enum Type {RED, YELLOW, BLUE}
+    private ShapeDrawer shapeDrawer;
 
-    public Element(float x, float y, Stage stage) {
+
+    public Element(float x, float y, Stage stage, ShapeDrawer shapeDrawer) {
         super(x, y, stage);
+        this.shapeDrawer = shapeDrawer;
         loadImage("whitePixel");
-        setSize(4, 4);
+        setSize(1, 1);
     }
 
-    private void shakeCamera(float duration) {
-        isShakyCam = true;
-        new BaseActor(0f, 0f, getStage()).addAction(Actions.sequence(
-                Actions.delay(duration),
-                Actions.run(() -> {
-                    isShakyCam = false;
-                    TiledMapActor.centerPositionCamera(getStage());
-                })
-        ));
+
+    @Override
+    public void draw(Batch batch, float parentAlpha) {
+        shapeDrawer.setColor(Color.RED);
+        shapeDrawer.filledCircle(getX(), getY(), getWidth());
+        super.draw(batch, parentAlpha);
     }
 }

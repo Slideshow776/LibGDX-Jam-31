@@ -18,7 +18,6 @@ public class OptionsScreen extends BaseScreen {
 
     @Override
     public void initialize() {
-        //TypingLabel mainLabel = new TypingLabel("Options", AssetLoader.getLabelStyle("Play-Bold59white"));
         TypingLabel mainLabel = new TypingLabel("Options", AssetLoader.mySkin);
         mainLabel.getFont().scale(.8f, .8f);
         uiTable.add(mainLabel)

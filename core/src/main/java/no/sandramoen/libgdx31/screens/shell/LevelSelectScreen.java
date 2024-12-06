@@ -46,7 +46,7 @@ public class LevelSelectScreen extends BaseScreen {
         button.addListener(
                 (Event event) -> {
                     if (GameUtils.isTouchDownEvent(event))
-                        BaseGame.setActiveScreen(new LevelScreen(AssetLoader.maps.get(levelNumber)));
+                        BaseGame.setActiveScreen(new LevelScreen());
                     return false;
                 }
         );
