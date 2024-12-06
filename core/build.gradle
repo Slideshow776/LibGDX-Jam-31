@@ -46,6 +46,7 @@ dependencies {
   api "com.github.tommyettinger:regexodus:$regExodusVersion"
   api "com.github.tommyettinger:textratypist:$textratypistVersion"
   api "com.rafaskoberg.gdx:typing-label:$typingLabelVersion"
+  api "space.earlygrey:shapedrawer:$shapeDrawerVersion"
 
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"

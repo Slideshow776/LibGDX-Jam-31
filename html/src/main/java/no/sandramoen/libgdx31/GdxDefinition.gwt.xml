@@ -19,6 +19,7 @@
   <inherits name="com.rafaskoberg.gdx.typinglabel.typinglabel" />
   <inherits name="no.sandramoen.libgdx31.MyGdxGame" />
   <inherits name="regexodus.regexodus" />
+  <inherits name="space.earlygrey.shapedrawer"/>
 
   <!-- You must change this if you rename packages later, or rename GwtLauncher. -->
   <entry-point class="no.sandramoen.libgdx31.gwt.GwtLauncher" />
