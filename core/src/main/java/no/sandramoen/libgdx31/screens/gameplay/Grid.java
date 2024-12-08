@@ -53,11 +53,11 @@ public class Grid {
                 float posX = offsetX + x * (cellSize + spacing); // Account for spacing
                 float posY = offsetY + y * (cellSize + spacing); // Account for spacing
 
-                // Create the shape with random type
+                // Randomly assign a shape type (CIRCLE, SQUARE, TRIANGLE, STAR)
                 Shape.Type randomType = Shape.Type.values()[(int) (Math.random() * Shape.Type.values().length)];
                 Shape shape = new Shape(posX, posY, stage, shapeDrawer, randomType, cellSize);
 
-                // Set grid position to keep track of where each shape is
+                // Set grid position to help track where the shape is
                 shape.setGridPosition(x, y);
                 column.add(shape); // Add the shape to the column
             }
