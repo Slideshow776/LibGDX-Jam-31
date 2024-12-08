@@ -21,7 +21,7 @@ public abstract class BaseScreen implements Screen, InputProcessor {
 
     public BaseScreen() {
         mainStage = new Stage();
-        mainStage.setViewport(new ExtendViewport(9, 16));
+        mainStage.setViewport(new ExtendViewport(BaseGame.WORLD_WIDTH, BaseGame.WORLD_HEIGHT));
 
         uiTable = new Table();
         uiTable.setFillParent(true);

@@ -4,9 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Array;
 import com.github.tommyettinger.textra.TypingLabel;
 
-import no.sandramoen.libgdx31.actors.Element;
 import no.sandramoen.libgdx31.screens.shell.LevelSelectScreen;
 import no.sandramoen.libgdx31.utils.AssetLoader;
 import no.sandramoen.libgdx31.utils.BaseGame;
@@ -16,7 +16,6 @@ import no.sandramoen.libgdx31.utils.BaseScreen;
 public class LevelScreen extends BaseScreen {
 
 
-    private Element player;
     private TypingLabel topLabel;
 
 
@@ -51,7 +50,20 @@ public class LevelScreen extends BaseScreen {
 
 
     private void initializeActors() {
-        player = new Element(3, 7, mainStage, shapeDrawer);
+        int gridWidth = 7;  // Number of columns
+        int gridHeight = 9; // Number of rows
+        float spacing = 0.2f;  // Space between shapes
+
+        // Create an Array for the margins: [left, right, top, bottom]
+        float margin = spacing;
+        Array<Float> margins = new Array<>();
+        margins.add(margin);  // Left margin
+        margins.add(margin);  // Right margin
+        margins.add(margin);  // Top margin
+        margins.add(-21.25f * margin);  // Bottom margin, magic number is a hack
+
+        // Create the grid with specified margins and spacing
+        Grid grid = new Grid(gridWidth, gridHeight, mainStage, shapeDrawer, spacing, margins);
     }
 
 
