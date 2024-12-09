@@ -16,7 +16,8 @@ import no.sandramoen.libgdx31.utils.BaseScreen;
 public class LevelScreen extends BaseScreen {
 
 
-    private TypingLabel topLabel;
+    public static int score;
+    public static TypingLabel topLabel;
 
 
     public LevelScreen() {
@@ -68,11 +69,21 @@ public class LevelScreen extends BaseScreen {
 
 
     private void initializeGUI() {
-        topLabel = new TypingLabel("{SLOWER}G A M E   O V E R !", AssetLoader.getLabelStyle("Play-Bold59white"));
+        topLabel = new TypingLabel("0", AssetLoader.getLabelStyle("Play-Bold59white"));
         topLabel.setAlignment(Align.top);
 
-        uiTable.defaults().padTop(Gdx.graphics.getHeight() * .02f);
-        uiTable.add(topLabel).height(topLabel.getPrefHeight() * 1.5f).expandY().top().row();
-        // uiTable.setDebug(true);
+        uiTable.defaults()
+            .padTop(Gdx.graphics.getHeight() * .02f)
+        ;
+
+        uiTable.add(topLabel)
+            .height(topLabel.getPrefHeight() * 1.5f)
+            .width(200)
+            .expandY()
+            .top()
+            .row()
+        ;
+
+        uiTable.setDebug(true);
     }
 }

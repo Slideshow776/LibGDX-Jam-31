@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
+import com.github.tommyettinger.textra.TypingLabel;
 
 import java.util.HashMap;
 
@@ -91,6 +92,8 @@ public class Grid {
 
 
     public void removeConnectedShapes(int x, int y, Shape.Type shapeType) {
+        int temp = 0;
+        float modifier = 1.01f;
         disableAllShapeClicks();
 
         // Use a queue to perform breadth-first search (BFS) to find all connected shapes
@@ -156,6 +159,8 @@ public class Grid {
 
         // Process shapes grouped by distance sequentially
         for (float distance : distanceGroups.keySet()) {
+            temp += 1 * modifier;
+            modifier *= modifier;
             Array<Shape> shapesAtDistance = distanceGroups.get(distance);
 
             // For shapes at the same distance, remove them one by one, with the delay increasing slightly
@@ -178,6 +183,9 @@ public class Grid {
             Actions.delay(delay),
             Actions.run(() -> applyGravity())
         ));
+        LevelScreen.score += temp;
+        LevelScreen.topLabel.setText("" + LevelScreen.score);
+        LevelScreen.topLabel.restart();
     }
 
 
