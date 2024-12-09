@@ -34,15 +34,9 @@ public class Shape extends BaseActor {
         }
     }
 
-    private final Color outlineColor = Color.WHITE;
-    private final float outlineScale = 1.075f;
-    private float currentScale = 1.0f;
-    private float currentRotation = 0.0f;
-
-
     private ShapeDrawer shapeDrawer;
     private int gridX, gridY;
-    private Type type;
+    public Type type;
     private Grid grid;
 
 
@@ -107,8 +101,6 @@ public class Shape extends BaseActor {
     }
 
 
-
-    // Set the grid position to help track where the shape is
     public void setGridPosition(int x, int y) {
         this.gridX = x;
         this.gridY = y;
@@ -143,11 +135,12 @@ public class Shape extends BaseActor {
         return new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                grid.removeShape(gridX, gridY);
+                grid.removeConnectedShapes(gridX, gridY, type);
                 return true;
             }
         };
     }
+
 
     private float[] calculateDiamondStar(Vector2 center, float radius, float rotation) {
         // Define a diamond-shaped star (4 points)
@@ -214,8 +207,6 @@ public class Shape extends BaseActor {
 
         return vertices;
     }
-
-
 
 
     private Vector2[] calculateRotatedTriangle(Vector2 center, float width, float height, float scale, float rotation) {

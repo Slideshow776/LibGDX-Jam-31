@@ -3,9 +3,13 @@ package no.sandramoen.libgdx31.screens.gameplay;
 import no.sandramoen.libgdx31.actors.Shape;
 import no.sandramoen.libgdx31.utils.BaseGame;
 import space.earlygrey.shapedrawer.ShapeDrawer;
+
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
+
+import java.util.HashMap;
 
 public class Grid {
 
@@ -69,16 +73,71 @@ public class Grid {
     }
 
 
-    public void removeShape(int x, int y) {
-        if (x >= 0 && x < width && y >= 0 && y < height) {
-            Shape shape = grid.get(x).get(y);
-            if (shape == null)
-                return;
+    public void removeConnectedShapes(int x, int y, Shape.Type shapeType) {
+        // Use a queue to perform breadth-first search (BFS) to find all connected shapes
+        Array<Vector2> toVisit = new Array<>();
+        Array<Vector2> visited = new Array<>();
+        Array<Shape> shapesToRemove = new Array<>();  // List to store shapes for removal
+        Array<Float> distances = new Array<>();  // Store the distance of shapes from the clicked shape
+        HashMap<Float, Array<Shape>> distanceGroups = new HashMap<>(); // Group shapes by distance
 
-            stage.addAction(Actions.sequence(Actions.run(shape::animatedRemove)));
-            grid.get(x).set(y, null); // Remove the reference from the grid
+        // Start with the clicked shape
+        toVisit.add(new Vector2(x, y));
+        distances.add(0f);  // The clicked shape has a distance of 0
 
+        // Perform BFS to gather shapes connected to the clicked shape
+        while (!toVisit.isEmpty()) {
+            Vector2 current = toVisit.pop();
+            int currentX = (int) current.x;
+            int currentY = (int) current.y;
+
+            // Check if already visited
+            if (visited.contains(current, false)) continue;
+
+            // Mark the current shape as visited
+            visited.add(current);
+
+            // Get the shape at the current position
+            Shape shape = grid.get(currentX).get(currentY);
+            if (shape == null || shape.type != shapeType) continue; // Skip if shape is null or type mismatch
+
+            // Add shape to the removal list and group by distance
+            float currentDistance = distances.get(distances.size - 1);
+            if (!distanceGroups.containsKey(currentDistance)) {
+                distanceGroups.put(currentDistance, new Array<>());
+            }
+            distanceGroups.get(currentDistance).add(shape);
+
+            // Add neighbors to the queue with incremented distance (up, down, left, right)
+            if (currentX > 0) { toVisit.add(new Vector2(currentX - 1, currentY)); distances.add(currentDistance + 1); } // Left
+            if (currentX < width - 1) { toVisit.add(new Vector2(currentX + 1, currentY)); distances.add(currentDistance + 1); } // Right
+            if (currentY > 0) { toVisit.add(new Vector2(currentX, currentY - 1)); distances.add(currentDistance + 1); } // Down
+            if (currentY < height - 1) { toVisit.add(new Vector2(currentX, currentY + 1)); distances.add(currentDistance + 1); } // Up
+        }
+
+        // Now, we will process each group of shapes based on their distance from the clicked shape
+        float delay = 0.1f;  // Initial delay for shapes at distance 1
+        float delayIncrement = 0.05f;  // Delay increment to speed up as we move further away from the clicked shape
+
+        // Start with the clicked shape
+        Shape clickedShape = grid.get(x).get(y);
+        if (clickedShape != null && clickedShape.type == shapeType) {
+            clickedShape.addAction(Actions.run(() -> clickedShape.animatedRemove())); // Remove clicked shape immediately
+        }
+
+        // Process shapes grouped by distance sequentially
+        for (float distance : distanceGroups.keySet()) {
+            Array<Shape> shapesAtDistance = distanceGroups.get(distance);
+
+            // For shapes at the same distance, remove them one by one, with the delay increasing slightly
+            for (Shape shape : shapesAtDistance) {
+                shape.addAction(Actions.delay(delay, Actions.run(() -> shape.animatedRemove())));
+            }
+
+            // After processing shapes at this distance, increase the delay for the next group
+            delay += delayIncrement;
         }
     }
+
 }
 
