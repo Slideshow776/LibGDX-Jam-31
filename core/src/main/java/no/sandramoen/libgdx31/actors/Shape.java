@@ -2,6 +2,7 @@ package no.sandramoen.libgdx31.actors;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -16,7 +17,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class Shape extends BaseActor {
 
-    public static final float ANIMATION_REMOVAL_DELAY = 0.4f;
+    public static final float ANIMATION_REMOVAL_DELAY = 0.2f;
 
     public enum Type {
         CIRCLE(Color.valueOf("7fd66f")),    // green
@@ -42,17 +43,16 @@ public class Shape extends BaseActor {
     private boolean clickable = true;
 
 
-
     public Shape(float x, float y, Stage stage, ShapeDrawer shapeDrawer, Type type, float cellSize, Grid grid) {
         super(x, y, stage);
         this.shapeDrawer = shapeDrawer;
         this.type = type;
         this.grid = grid;
         loadImage("shapes/circle/eyes");
-        getColor().a = 0.0f;  // Set transparency (optional)
+        getColor().a = 0.0f;  // Ensure fully visible
         setSize(cellSize, cellSize); // Set the size of the shape
 
-        // Set the origin to the center
+        // Set the origin to the center for scaling and rotation
         setOrigin(getWidth() / 2f, getHeight() / 2f);
 
         addListener(onShapeClicked());
@@ -119,13 +119,10 @@ public class Shape extends BaseActor {
         addAction(
             Actions.sequence(
                 Actions.parallel(
-                    Actions.scaleTo(0.0f, 0.0f, ANIMATION_REMOVAL_DELAY), // Scale animation
-                    Actions.rotateBy(360f, ANIMATION_REMOVAL_DELAY)      // Rotation animation
+                    Actions.scaleTo(0.0f, 0.0f, ANIMATION_REMOVAL_DELAY),
+                    Actions.rotateBy(360f, ANIMATION_REMOVAL_DELAY)
                 ),
-                Actions.run(() -> {
-                    // Final cleanup after animation
-                    remove(); // Remove the actor
-                })
+                Actions.removeActor()
             )
         );
     }

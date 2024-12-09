@@ -1,6 +1,7 @@
 package no.sandramoen.libgdx31.screens.gameplay;
 
 import no.sandramoen.libgdx31.actors.Shape;
+import no.sandramoen.libgdx31.utils.AssetLoader;
 import no.sandramoen.libgdx31.utils.BaseGame;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
@@ -54,9 +55,12 @@ public class Grid {
         float offsetY = marginBottom + (availableHeight - (height * cellSize + (spacing * (height - 1)))) / 2f;
 
         // Initialize the grid with shapes
+        float baseDelay = 0.1f; // Delay factor for row stagger
         for (int x = 0; x < width; x++) {
             Array<Shape> column = new Array<>(height);
+
             for (int y = 0; y < height; y++) {
+
                 // Calculate the shape position within each grid cell, considering spacing and margins
                 float posX = offsetX + x * (cellSize + spacing); // Account for spacing
                 float posY = offsetY + y * (cellSize + spacing); // Account for spacing
@@ -68,6 +72,18 @@ public class Grid {
                 // Set grid position to help track where the shape is
                 shape.setGridPosition(x, y);
                 column.add(shape); // Add the shape to the column
+
+                // Stagger animation for each row
+                float delay = baseDelay * y; // Delay increases with row index
+                shape.setScale(0f); // Start with scale 0
+                shape.addAction(Actions.sequence(
+                    Actions.delay(delay),
+                    Actions.scaleTo(1f, 1f, 0.2f, Interpolation.sineOut) // Smooth scale-in animation
+                ));
+                stage.addAction(Actions.sequence(
+                    Actions.delay(delay),
+                    Actions.run(() -> AssetLoader.bubbleSound.play(BaseGame.soundVolume * 0.5f, 0.4f + (1.25f * delay), 0.0f))
+                ));
             }
             grid.add(column); // Add the column of shapes to the grid
         }
@@ -111,10 +127,22 @@ public class Grid {
             distanceGroups.get(currentDistance).add(shape);
 
             // Add neighbors to the queue with incremented distance (up, down, left, right)
-            if (currentX > 0) { toVisit.add(new Vector2(currentX - 1, currentY)); distances.add(currentDistance + 1); } // Left
-            if (currentX < width - 1) { toVisit.add(new Vector2(currentX + 1, currentY)); distances.add(currentDistance + 1); } // Right
-            if (currentY > 0) { toVisit.add(new Vector2(currentX, currentY - 1)); distances.add(currentDistance + 1); } // Down
-            if (currentY < height - 1) { toVisit.add(new Vector2(currentX, currentY + 1)); distances.add(currentDistance + 1); } // Up
+            if (currentX > 0) {
+                toVisit.add(new Vector2(currentX - 1, currentY));
+                distances.add(currentDistance + 1);
+            } // Left
+            if (currentX < width - 1) {
+                toVisit.add(new Vector2(currentX + 1, currentY));
+                distances.add(currentDistance + 1);
+            } // Right
+            if (currentY > 0) {
+                toVisit.add(new Vector2(currentX, currentY - 1));
+                distances.add(currentDistance + 1);
+            } // Down
+            if (currentY < height - 1) {
+                toVisit.add(new Vector2(currentX, currentY + 1));
+                distances.add(currentDistance + 1);
+            } // Up
         }
 
         // Now, we will process each group of shapes based on their distance from the clicked shape
@@ -123,10 +151,8 @@ public class Grid {
 
         // Start with the clicked shape
         Shape clickedShape = grid.get(x).get(y);
-        if (clickedShape != null && clickedShape.type == shapeType) {
-            clickedShape.addAction(Actions.run(() -> clickedShape.animatedRemove())); // Remove clicked shape immediately
-            grid.get(x).set(y, null);  // Mark the grid position as null immediately
-        }
+        clickedShape.animatedRemove(); // Remove clicked shape immediately
+        grid.get(x).set(y, null);  // Mark the grid position as null immediately
 
         // Process shapes grouped by distance sequentially
         for (float distance : distanceGroups.keySet()) {
@@ -134,7 +160,11 @@ public class Grid {
 
             // For shapes at the same distance, remove them one by one, with the delay increasing slightly
             for (Shape shape : shapesAtDistance) {
-                shape.addAction(Actions.delay(delay, Actions.run(() -> shape.animatedRemove())));
+                float finalDelay = delay;
+                shape.addAction(Actions.delay(delay, Actions.run(() -> {
+                    AssetLoader.bubbleSound.play(BaseGame.soundVolume, 0.8f + (2 * finalDelay), 0.0f);
+                    shape.animatedRemove();
+                })));
                 // Immediately set the grid position to null as the shape is marked for removal
                 Vector2 shapePosition = shape.getGridPosition();
                 grid.get((int) shapePosition.x).set((int) shapePosition.y, null);
@@ -153,7 +183,7 @@ public class Grid {
 
     public void applyGravity() {
         float delay = 0.1f; // Initial delay for the first shape
-        float bounceDelay = 0.85f;
+        float bounceDelay = 0.5f;
 
         // Loop over each column (x coordinate)
         for (int x = 0; x < width; x++) {
@@ -197,7 +227,7 @@ public class Grid {
         }
         stage.addAction(Actions.sequence(
             Actions.delay((delay + bounceDelay) * 0.65f),
-            Actions.run( () -> enableAllShapeClicks())
+            Actions.run(() -> enableAllShapeClicks())
         ));
     }
 
