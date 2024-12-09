@@ -16,6 +16,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 
 public class Shape extends BaseActor {
 
+    public static final float ANIMATION_REMOVAL_DELAY = 0.4f;
 
     public enum Type {
         CIRCLE(Color.valueOf("7fd66f")),    // green
@@ -38,6 +39,8 @@ public class Shape extends BaseActor {
     private int gridX, gridY;
     public Type type;
     private Grid grid;
+    private boolean clickable = true;
+
 
 
     public Shape(float x, float y, Stage stage, ShapeDrawer shapeDrawer, Type type, float cellSize, Grid grid) {
@@ -107,12 +110,17 @@ public class Shape extends BaseActor {
     }
 
 
+    public Vector2 getGridPosition() {
+        return new Vector2(gridX, gridY);
+    }
+
+
     public void animatedRemove() {
         addAction(
             Actions.sequence(
                 Actions.parallel(
-                    Actions.scaleTo(0.0f, 0.0f, 1.0f), // Scale animation
-                    Actions.rotateBy(360f, 1.0f)      // Rotation animation
+                    Actions.scaleTo(0.0f, 0.0f, ANIMATION_REMOVAL_DELAY), // Scale animation
+                    Actions.rotateBy(360f, ANIMATION_REMOVAL_DELAY)      // Rotation animation
                 ),
                 Actions.run(() -> {
                     // Final cleanup after animation
@@ -120,6 +128,16 @@ public class Shape extends BaseActor {
                 })
             )
         );
+    }
+
+
+    public void setClickable(boolean clickable) {
+        this.clickable = clickable;
+        if (clickable) {
+            addListener(onShapeClicked()); // Re-attach click listener if clickable
+        } else {
+            removeListener(onShapeClicked()); // Remove click listener if not clickable
+        }
     }
 
 
@@ -135,7 +153,9 @@ public class Shape extends BaseActor {
         return new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                grid.removeConnectedShapes(gridX, gridY, type);
+                if (clickable) {
+                    grid.removeConnectedShapes(gridX, gridY, type);
+                }
                 return true;
             }
         };
