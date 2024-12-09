@@ -4,20 +4,23 @@ import no.sandramoen.libgdx31.actors.Shape;
 import no.sandramoen.libgdx31.utils.BaseGame;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
 
 public class Grid {
 
     private int width, height;
     private Array<Array<Shape>> grid;
-    private float spacing; // Space between shapes
+    private float shapeSpacing; // Space between shapes
     private Array<Float> margins; // Array for margins (left, right, top, bottom)
+    private Stage stage;
 
-    // Constructor with margin array
+
     public Grid(int width, int height, Stage stage, ShapeDrawer shapeDrawer, float spacing, Array<Float> margins) {
         this.width = width;
         this.height = height;
-        this.spacing = spacing;
+        this.stage = stage;
+        this.shapeSpacing = spacing;
         this.margins = margins;
         this.grid = new Array<>(width);
 
@@ -55,7 +58,7 @@ public class Grid {
 
                 // Randomly assign a shape type (CIRCLE, SQUARE, TRIANGLE, STAR)
                 Shape.Type randomType = Shape.Type.values()[(int) (Math.random() * Shape.Type.values().length)];
-                Shape shape = new Shape(posX, posY, stage, shapeDrawer, randomType, cellSize);
+                Shape shape = new Shape(posX, posY, stage, shapeDrawer, randomType, cellSize, this);
 
                 // Set grid position to help track where the shape is
                 shape.setGridPosition(x, y);
@@ -64,4 +67,18 @@ public class Grid {
             grid.add(column); // Add the column of shapes to the grid
         }
     }
+
+
+    public void removeShape(int x, int y) {
+        if (x >= 0 && x < width && y >= 0 && y < height) {
+            Shape shape = grid.get(x).get(y);
+            if (shape == null)
+                return;
+
+            stage.addAction(Actions.sequence(Actions.run(shape::animatedRemove)));
+            grid.get(x).set(y, null); // Remove the reference from the grid
+
+        }
+    }
 }
+
