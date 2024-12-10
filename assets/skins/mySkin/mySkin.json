@@ -9,13 +9,13 @@ com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	Play-Bold40white: {
 		file: Play-Bold40white.fnt
 		scaledSize: 1
-		markupEnabled: false
+		markupEnabled: true
 		flip: false
 	}
 	Play-Bold59white: {
 		file: Play-Bold59white.fnt
 		scaledSize: 1
-		markupEnabled: false
+		markupEnabled: true
 		flip: false
 	}
 }

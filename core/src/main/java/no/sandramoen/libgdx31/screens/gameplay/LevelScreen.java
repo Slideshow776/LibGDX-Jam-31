@@ -132,6 +132,7 @@ public class LevelScreen extends BaseScreen {
             .height(scoreLabel.getPrefHeight() * 1.5f)
             //.expandY()
             .top()
+            .align(Align.top)
             .row()
         ;
 
