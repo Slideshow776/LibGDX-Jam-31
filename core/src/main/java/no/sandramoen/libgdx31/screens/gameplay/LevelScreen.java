@@ -1,15 +1,18 @@
 package no.sandramoen.libgdx31.screens.gameplay;
 
+import static no.sandramoen.libgdx31.utils.AssetLoader.heartbeatSound;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.github.tommyettinger.textra.TypingLabel;
 
 import no.sandramoen.libgdx31.gui.BaseProgressBar;
-import no.sandramoen.libgdx31.screens.shell.LevelSelectScreen;
 import no.sandramoen.libgdx31.utils.AssetLoader;
 import no.sandramoen.libgdx31.utils.BaseGame;
 import no.sandramoen.libgdx31.utils.BaseScreen;
@@ -19,9 +22,11 @@ public class LevelScreen extends BaseScreen {
 
 
     public static int score;
-    public static TypingLabel topLabel;
+    public static TypingLabel scoreLabel;
+    public static TypingLabel messageLabel;
 
     private static BaseProgressBar healthBar;
+    private static Grid grid;
 
 
     public LevelScreen() {
@@ -48,10 +53,6 @@ public class LevelScreen extends BaseScreen {
             OrthographicCamera camera = (OrthographicCamera) mainStage.getCamera();
             camera.zoom += .1f;
         }
-        else if (keycode == Keys.T)
-            healthBar.incrementPercentage(10);
-        else if (keycode == Keys.Y)
-            healthBar.decrementPercentage(10);
 
         return super.keyDown(keycode);
     }
@@ -59,7 +60,39 @@ public class LevelScreen extends BaseScreen {
 
     public static void looseHealth() {
         healthBar.decrementPercentage(10);
+        if (healthBar.level >= 10) {
+            // Calculate pitch based on the level, ranging from 0.8 to 1.2
+            float pitch = 1.2f - ((healthBar.level - 10) / 100.0f) * (1.2f - 0.8f);  // Linearly map level to pitch between 0.8 and 1.2
+            AssetLoader.healthLossSound.play(BaseGame.soundVolume, pitch, 0.0f);
+        }
+
+        if (healthBar.level != 0)
+            return;
+
+        grid.clearBoard();
+        AssetLoader.gongSound.play(BaseGame.soundVolume);
+        messageLabel.addAction(Actions.sequence(
+            Actions.delay(1.0f),
+            Actions.fadeIn(5.0f)
+        ));
     }
+
+
+    public static void gainHealth() {
+        if (healthBar.level >= 100)
+            return;
+
+        // Increment health by 10
+        healthBar.incrementPercentage(10);
+
+        // Calculate volume based on current health level, making it louder as health decreases
+        float volume = BaseGame.soundVolume * 1.0f + (1.0f - (healthBar.level / 100.0f)) * 0.5f;
+        System.out.println(volume);
+
+        // Play the heartbeat sound with a random pitch between 0.8 and 1.2
+        heartbeatSound.play(volume, MathUtils.random(0.8f, 1.2f), 0.0f);
+    }
+
 
 
     private void initializeActors() {
@@ -76,24 +109,28 @@ public class LevelScreen extends BaseScreen {
         margins.add(-21.25f * margin);  // Bottom margin, magic number is a hack
 
         // Create the grid with specified margins and spacing
-        Grid grid = new Grid(gridWidth, gridHeight, mainStage, shapeDrawer, spacing, margins);
+        grid = new Grid(gridWidth, gridHeight, mainStage, shapeDrawer, spacing, margins);
     }
 
 
     private void initializeGUI() {
-        topLabel = new TypingLabel("0", AssetLoader.getLabelStyle("Play-Bold59white"));
-        topLabel.setAlignment(Align.center);
+        scoreLabel = new TypingLabel("0", AssetLoader.getLabelStyle("Play-Bold59white"));
+        scoreLabel.setAlignment(Align.center);
 
         healthBar = new BaseProgressBar(0, 0, uiStage);
         healthBar.incrementPercentage(100);
         healthBar.setProgressBarColor(Color.valueOf("de3a68"));
 
+        messageLabel = new TypingLabel("{CROWD}press 'R' to reincarnate", AssetLoader.getLabelStyle("Play-Bold59white"));
+        messageLabel.getColor().a = 0.0f;
+        messageLabel.setAlignment(Align.center);
+
         uiTable.defaults()
             .padTop(Gdx.graphics.getHeight() * .02f)
         ;
 
-        uiTable.add(topLabel)
-            .height(topLabel.getPrefHeight() * 1.5f)
+        uiTable.add(scoreLabel)
+            .height(scoreLabel.getPrefHeight() * 1.5f)
             //.expandY()
             .top()
             .align(Align.top)
@@ -101,6 +138,11 @@ public class LevelScreen extends BaseScreen {
         ;
 
         uiTable.add(healthBar)
+            .expandY()
+            .top()
+            .row();
+
+        uiTable.add(messageLabel)
             .expandY()
             .top()
             .row();

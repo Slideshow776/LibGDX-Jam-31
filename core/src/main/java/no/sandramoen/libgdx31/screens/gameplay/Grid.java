@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
-import com.github.tommyettinger.textra.TypingLabel;
 
 import java.util.HashMap;
 
@@ -95,6 +94,7 @@ public class Grid {
         int levelScore = 0;
         float scoreModifier = 1.0005f;
         int triggeredShapes = 0;
+        int numCirclesTriggered = 0;
 
         disableAllShapeClicks();
 
@@ -172,12 +172,14 @@ public class Grid {
                 float finalDelay = delay;
                 triggeredShapes++;
                 shape.addAction(Actions.delay(delay, Actions.run(() -> {
-                    AssetLoader.bubbleSound.play(BaseGame.soundVolume, 0.8f + (2 * finalDelay), 0.0f);
+                    AssetLoader.bubbleSound.play(BaseGame.soundVolume, 0.8f + (finalDelay), 0.0f);
                     shape.animatedRemove();
                 })));
                 // Immediately set the grid position to null as the shape is marked for removal
                 Vector2 shapePosition = shape.getGridPosition();
                 grid.get((int) shapePosition.x).set((int) shapePosition.y, null);
+                if (shape.type == Shape.Type.CIRCLE)
+                    numCirclesTriggered++;
             }
 
             // After processing shapes at this distance, increase the delay for the next group
@@ -191,11 +193,14 @@ public class Grid {
 
         // set score
         LevelScreen.score += levelScore;
-        LevelScreen.topLabel.setText("" + LevelScreen.score);
-        LevelScreen.topLabel.restart();
-        LevelScreen.topLabel.invalidateHierarchy();
+        LevelScreen.scoreLabel.setText("" + LevelScreen.score);
+        LevelScreen.scoreLabel.restart();
+        LevelScreen.scoreLabel.invalidateHierarchy();
+
         if (triggeredShapes == 1)
             LevelScreen.looseHealth();
+        if (numCirclesTriggered >= 4)
+            LevelScreen.gainHealth();
     }
 
 
@@ -246,6 +251,60 @@ public class Grid {
         stage.addAction(Actions.sequence(
             Actions.delay((delay + bounceDelay) * 0.65f),
             Actions.run(() -> enableAllShapeClicks())
+        ));
+    }
+
+
+    public void clearBoard() {
+        // Disable clicks to prevent interaction during the clearing process
+        disableAllShapeClicks();
+
+        Array<Shape> allShapes = new Array<>();
+
+        // Collect all the shapes in the grid
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                Shape shape = grid.get(x).get(y);
+                if (shape != null) {
+                    allShapes.add(shape); // Add shape to list of shapes
+                }
+            }
+        }
+
+        // Shuffle the list of shapes to randomize the order
+        allShapes.shuffle();
+
+        float delay = 0.01f;  // Starting delay for the first shape
+        float delayIncrement = 0.005f;  // Delay increment to gradually increase the time for each subsequent shape
+
+        // Iterate through each shape in the shuffled list and apply the removal animation
+        for (Shape shape : allShapes) {
+            shape.addAction(Actions.sequence(
+                Actions.delay(delay), // Add a random delay for each shape
+                Actions.fadeOut(0.5f), // Fade out the shape
+                Actions.scaleTo(0f, 0f, 0.5f, Interpolation.sineIn), // Shrink the shape to 0
+                Actions.run(() -> {
+                    // Remove the shape from the grid and stage
+                    shape.animatedRemove();
+                    // Set the grid position to null as the shape is removed
+                    Vector2 shapePosition = shape.getGridPosition();
+                    grid.get((int) shapePosition.x).set((int) shapePosition.y, null);
+                })
+            ));
+
+            // Increase the delay for the next shape to create a cascading effect
+            delay += delayIncrement;
+        }
+
+        // After all shapes have been removed, we can optionally reinitialize the grid or trigger a new round.
+        stage.addAction(Actions.sequence(
+            Actions.delay(delay),  // Wait for all animations to complete
+            Actions.run(() -> {
+                // Optionally: reinitialize the grid or trigger a new round here
+                enableAllShapeClicks();
+                // Optionally apply gravity or any other post-clear action
+                applyGravity();
+            })
         ));
     }
 

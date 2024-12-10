@@ -13,10 +13,10 @@ import no.sandramoen.libgdx31.utils.BaseActor;
 
 public class BaseProgressBar extends BaseActor {
 
+    public int level = 0; // Store level as an integer from 0 to 100
+
     private BaseActor progress;
     private TypingLabel label;
-
-    private int level = 0; // Store level as an integer from 0 to 100
 
     public BaseProgressBar(float x, float y, Stage stage) {
         super(0f, 0f, stage);
