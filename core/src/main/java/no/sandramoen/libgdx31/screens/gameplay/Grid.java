@@ -92,8 +92,9 @@ public class Grid {
 
 
     public void removeConnectedShapes(int x, int y, Shape.Type shapeType) {
-        int temp = 0;
-        float modifier = 1.01f;
+        int levelScore = 0;
+        float scoreModifier = 1.0005f;
+
         disableAllShapeClicks();
 
         // Use a queue to perform breadth-first search (BFS) to find all connected shapes
@@ -159,8 +160,9 @@ public class Grid {
 
         // Process shapes grouped by distance sequentially
         for (float distance : distanceGroups.keySet()) {
-            temp += 1 * modifier;
-            modifier *= modifier;
+            // calculate score
+            levelScore += (1 * scoreModifier);
+            scoreModifier = 1.1f + (distance * 0.05f); // Modifier grows based on distance
             Array<Shape> shapesAtDistance = distanceGroups.get(distance);
 
             // For shapes at the same distance, remove them one by one, with the delay increasing slightly
@@ -183,7 +185,9 @@ public class Grid {
             Actions.delay(delay),
             Actions.run(() -> applyGravity())
         ));
-        LevelScreen.score += temp;
+
+        // set score
+        LevelScreen.score += levelScore;
         LevelScreen.topLabel.setText("" + LevelScreen.score);
         LevelScreen.topLabel.restart();
     }

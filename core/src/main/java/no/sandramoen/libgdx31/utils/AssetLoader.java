@@ -124,7 +124,7 @@ public class AssetLoader implements AssetErrorListener {
     }
 
     private static void loadFonts() {
-        float scale = Gdx.graphics.getWidth() * .000656f; // magic number ensures scale ~= 1, based on screen width
+        float scale = Gdx.graphics.getWidth() * .001f; // magic number ensures scale ~= 1, based on screen width
         scale *= 1.01f; // make x percent bigger, bigger = more fuzzy
 
         mySkin.getFont("Play-Bold20white").getData().setScale(scale);

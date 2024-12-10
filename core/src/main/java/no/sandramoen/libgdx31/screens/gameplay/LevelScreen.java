@@ -39,7 +39,7 @@ public class LevelScreen extends BaseScreen {
         if (keycode == Keys.ESCAPE || keycode == Keys.Q)
             Gdx.app.exit();
         else if (keycode == Keys.R)
-            BaseGame.setActiveScreen(new LevelScreen());
+            restart();
         else if (keycode == Keys.T)
             BaseGame.setActiveScreen(new LevelSelectScreen());
         else if (keycode == Keys.NUMPAD_0) {
@@ -70,7 +70,7 @@ public class LevelScreen extends BaseScreen {
 
     private void initializeGUI() {
         topLabel = new TypingLabel("0", AssetLoader.getLabelStyle("Play-Bold59white"));
-        topLabel.setAlignment(Align.top);
+        topLabel.setAlignment(Align.center);
 
         uiTable.defaults()
             .padTop(Gdx.graphics.getHeight() * .02f)
@@ -78,12 +78,17 @@ public class LevelScreen extends BaseScreen {
 
         uiTable.add(topLabel)
             .height(topLabel.getPrefHeight() * 1.5f)
-            .width(200)
             .expandY()
             .top()
             .row()
         ;
 
-        uiTable.setDebug(true);
+        //uiTable.setDebug(true);
+    }
+
+
+    private void restart() {
+        BaseGame.setActiveScreen(new LevelScreen());
+        LevelScreen.score = 0;
     }
 }
