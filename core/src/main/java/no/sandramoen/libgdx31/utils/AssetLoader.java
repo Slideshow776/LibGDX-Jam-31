@@ -22,6 +22,7 @@ public class AssetLoader implements AssetErrorListener {
 
     public static String defaultShader;
     public static String shockwaveShader;
+    public static String backgroundShader;
 
     public static Sound click1Sound;
     public static Sound hoverOverEnterSound;
@@ -91,6 +92,7 @@ public class AssetLoader implements AssetErrorListener {
         // shaders
         BaseGame.assetManager.load(new AssetDescriptor("shaders/default.vs", Text.class, new TextLoader.TextParameter()));
         BaseGame.assetManager.load(new AssetDescriptor("shaders/shockwave.fs", Text.class, new TextLoader.TextParameter()));
+        BaseGame.assetManager.load(new AssetDescriptor("shaders/voronoi.fs", Text.class, new TextLoader.TextParameter()));
 
         // skins
 
@@ -137,6 +139,7 @@ public class AssetLoader implements AssetErrorListener {
         // shaders
         defaultShader = BaseGame.assetManager.get("shaders/default.vs", Text.class).getString();
         shockwaveShader = BaseGame.assetManager.get("shaders/shockwave.fs", Text.class).getString();
+        backgroundShader = BaseGame.assetManager.get("shaders/voronoi.fs", Text.class).getString();
 
         // skins
         mySkin = new Skin(Gdx.files.internal("skins/mySkin/mySkin.json"));

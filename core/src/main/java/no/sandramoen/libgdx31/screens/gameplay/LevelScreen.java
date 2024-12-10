@@ -7,11 +7,14 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.github.tommyettinger.textra.TypingLabel;
 
+import no.sandramoen.libgdx31.actors.Background;
 import no.sandramoen.libgdx31.gui.BaseProgressBar;
 import no.sandramoen.libgdx31.utils.AssetLoader;
 import no.sandramoen.libgdx31.utils.BaseGame;
@@ -95,7 +98,6 @@ public class LevelScreen extends BaseScreen {
 
         // Calculate volume based on current health level, making it louder as health decreases
         float volume = BaseGame.soundVolume * 1.5f + (1.0f - (healthBar.level / 100.0f)) * 0.5f;
-        System.out.println(volume);
 
         // Play the heartbeat sound with a random pitch between 0.8 and 1.2
         heartbeatSound.play(volume, MathUtils.random(0.8f, 1.2f), 0.0f);
@@ -104,6 +106,8 @@ public class LevelScreen extends BaseScreen {
 
 
     private void initializeActors() {
+        new Background(0, 0, mainStage, new Vector3(.06f, .06f, .06f));
+
         int gridWidth = 7;  // Number of columns
         int gridHeight = 9; // Number of rows
         float spacing = 0.2f;  // Space between shapes
