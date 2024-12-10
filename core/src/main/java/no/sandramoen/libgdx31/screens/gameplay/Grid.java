@@ -193,6 +193,7 @@ public class Grid {
         LevelScreen.score += levelScore;
         LevelScreen.topLabel.setText("" + LevelScreen.score);
         LevelScreen.topLabel.restart();
+        LevelScreen.topLabel.invalidateHierarchy();
         if (triggeredShapes == 1)
             LevelScreen.looseHealth();
     }

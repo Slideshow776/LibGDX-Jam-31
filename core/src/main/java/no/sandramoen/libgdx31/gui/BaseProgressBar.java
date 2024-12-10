@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.utils.Align;
+import com.github.tommyettinger.textra.Styles;
 import com.github.tommyettinger.textra.TypingLabel;
 
 import no.sandramoen.libgdx31.utils.AssetLoader;
@@ -30,14 +32,25 @@ public class BaseProgressBar extends BaseActor {
         progress.setSize(0.0f, getHeight());
         addActor(progress);
 
-        label = new TypingLabel("" + level + " / 100", AssetLoader.getLabelStyle("Play-Bold59white"));
+        Styles.LabelStyle levelStyle = AssetLoader.getLabelStyle("Play-Bold59white");
+        levelStyle.font.scale(0.5f);
+        label = new TypingLabel(level + " / 100", levelStyle);
+        label.setWidth(getWidth());
+        label.setAlignment(Align.center);
+        label.skipToTheEnd(true, true);
         label.setColor(new Color(0.922f, 0.929f, 0.914f, 1f)); // white
-        label.getFont().scale(0.5f, 0.5f);
         label.setPosition(
-            getWidth() / 2 - label.getPrefWidth() / 4,
-            (getHeight() / 2) * 1.1f
-        );
+            getWidth() * 0.5f - label.getFont().calculateSize(label.getWorkingLayout()) * 0.5f,
+            getHeight() * 0.55f);
         addActor(label);
+
+        // Just shows where the exact center of the bar is.
+//        BaseActor guideline = new BaseActor(getWidth() * 0.5f, 0f, stage);
+//        guideline.loadImage("whitePixel");
+//        guideline.setColor(new Color(0.2f, 0.8f, 0.5f, 1f)); // mid aqua
+//        guideline.setSize(2f, getHeight());
+//        addActor(guideline);
+
     }
 
     // Increment the progress bar by a certain percentage (in integer values)
@@ -50,7 +63,11 @@ public class BaseProgressBar extends BaseActor {
         progress.addAction(Actions.sizeTo(newWidth, getHeight(), 0.25f));
 
         // Update the label with the new level
-        label.setText(level + " / 100");
+        label.setText(level + " / 100", true);
+        label.setPosition(
+            getWidth() * 0.5f - label.getFont().calculateSize(label.getWorkingLayout()) * 0.5f,
+            getHeight() * 0.55f);
+
     }
 
     // Decrement the progress bar by a certain percentage (in integer values)
@@ -63,7 +80,10 @@ public class BaseProgressBar extends BaseActor {
         progress.addAction(Actions.sizeTo(newWidth, getHeight(), 0.25f));
 
         // Update the label with the new level
-        label.setText(level + " / 100");
+        label.setText(level + " / 100", true);
+        label.setPosition(
+            getWidth() * 0.5f - label.getFont().calculateSize(label.getWorkingLayout()) * 0.5f,
+            getHeight() * 0.55f);
     }
 
     // Set the color of the progress bar

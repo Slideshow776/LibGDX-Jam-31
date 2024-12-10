@@ -96,6 +96,7 @@ public class LevelScreen extends BaseScreen {
             .height(topLabel.getPrefHeight() * 1.5f)
             //.expandY()
             .top()
+            .align(Align.top)
             .row()
         ;
 
