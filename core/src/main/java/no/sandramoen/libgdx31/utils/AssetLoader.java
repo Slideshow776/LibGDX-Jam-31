@@ -27,6 +27,8 @@ public class AssetLoader implements AssetErrorListener {
     public static Sound click1Sound;
     public static Sound hoverOverEnterSound;
     public static Sound bubbleSound;
+    public static Sound gongSound;
+    public static Sound healthLossSound;
 
     public static Array<Music> music;
     public static Music menuMusic;
@@ -70,6 +72,8 @@ public class AssetLoader implements AssetErrorListener {
         BaseGame.assetManager.load("audio/sound/click1.wav", Sound.class);
         BaseGame.assetManager.load("audio/sound/hoverOverEnter.wav", Sound.class);
         BaseGame.assetManager.load("audio/sound/104940__glaneur-de-sons__bubble-1.ogg", Sound.class);
+        BaseGame.assetManager.load("audio/sound/486629__jenszygar__gong-brilliant-paiste-32.ogg", Sound.class);
+        BaseGame.assetManager.load("audio/sound/563916__gemesil__bad-omen.ogg", Sound.class);
 
         // i18n
 
@@ -104,6 +108,8 @@ public class AssetLoader implements AssetErrorListener {
         click1Sound = BaseGame.assetManager.get("audio/sound/click1.wav", Sound.class);
         hoverOverEnterSound = BaseGame.assetManager.get("audio/sound/hoverOverEnter.wav", Sound.class);
         bubbleSound = BaseGame.assetManager.get("audio/sound/104940__glaneur-de-sons__bubble-1.ogg", Sound.class);
+        gongSound = BaseGame.assetManager.get("audio/sound/486629__jenszygar__gong-brilliant-paiste-32.ogg", Sound.class);
+        healthLossSound = BaseGame.assetManager.get("audio/sound/563916__gemesil__bad-omen.ogg", Sound.class);
 
         // i18n
 
