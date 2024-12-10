@@ -108,7 +108,7 @@ public class LevelScreen extends BaseScreen {
         margins.add(-21.25f * margin);  // Bottom margin, magic number is a hack
 
         // Create the grid with specified margins and spacing
-        grid = new Grid(gridWidth, gridHeight, mainStage, shapeDrawer, spacing, margins);
+        grid = new Grid(gridWidth, gridHeight, mainStage, uiStage, shapeDrawer, spacing, margins);
     }
 
 

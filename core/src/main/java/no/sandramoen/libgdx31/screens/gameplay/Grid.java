@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Array;
+import com.github.tommyettinger.textra.TypingLabel;
 
 import java.util.HashMap;
 
@@ -21,12 +22,14 @@ public class Grid {
     private int width, height;
     private Array<Array<Shape>> grid;
     private float spacing;
-    private Stage stage;
+    private Stage mainStage;
+    private Stage uiStage;
 
-    public Grid(int width, int height, Stage stage, ShapeDrawer shapeDrawer, float spacing, Array<Float> margins) {
+    public Grid(int width, int height, Stage mainStage, Stage uiStage, ShapeDrawer shapeDrawer, float spacing, Array<Float> margins) {
         this.width = width;
         this.height = height;
-        this.stage = stage;
+        this.mainStage = mainStage;
+        this.uiStage= uiStage;
         this.spacing = spacing;
 
         grid = new Array<>(width);
@@ -68,7 +71,7 @@ public class Grid {
 
                 // Randomly assign a shape type (CIRCLE, SQUARE, TRIANGLE, STAR)
                 Shape.Type randomType = Shape.Type.values()[(int) (Math.random() * Shape.Type.values().length)];
-                Shape shape = new Shape(posX, posY, stage, shapeDrawer, randomType, cellSize, this);
+                Shape shape = new Shape(posX, posY, mainStage, shapeDrawer, randomType, cellSize, this);
 
                 // Set grid position to help track where the shape is
                 shape.setGridPosition(x, y);
@@ -81,7 +84,7 @@ public class Grid {
                     Actions.delay(delay),
                     Actions.scaleTo(1f, 1f, 0.2f, Interpolation.sineOut) // Smooth scale-in animation
                 ));
-                stage.addAction(Actions.sequence(
+                mainStage.addAction(Actions.sequence(
                     Actions.delay(delay),
                     // Actions.run(() -> AssetLoader.bubbleSound.play(BaseGame.soundVolume * 0.5f, 0.4f + (1.25f * delay), 0.0f))
                     Actions.run(() -> AssetLoader.swordSounds.get(MathUtils.random(0, 13)).play(BaseGame.soundVolume * 0.5f, 0.4f + (1.25f * delay), 0.0f))
@@ -178,6 +181,13 @@ public class Grid {
                     //AssetLoader.bubbleSound.play(BaseGame.soundVolume, 0.8f + (finalDelay), 0.0f);
                     shape.animatedRemove();
                 })));
+
+                // feature TODO: label that shows the score you get.
+                /*TypingLabel label = new TypingLabel("0", AssetLoader.getLabelStyle("Play-Bold20white"));
+                label.scaleBy(0.05f);
+                label.setPosition(shape.getX(), shape.getY());
+                mainStage.addActor(label);*/
+
                 // Immediately set the grid position to null as the shape is marked for removal
                 Vector2 shapePosition = shape.getGridPosition();
                 grid.get((int) shapePosition.x).set((int) shapePosition.y, null);
@@ -189,7 +199,7 @@ public class Grid {
             delay += delayIncrement;
         }
 
-        stage.addAction(Actions.sequence(
+        mainStage.addAction(Actions.sequence(
             Actions.delay(delay),
             Actions.run(() -> applyGravity())
         ));
@@ -256,7 +266,7 @@ public class Grid {
                 }
             }
         }
-        stage.addAction(Actions.sequence(
+        mainStage.addAction(Actions.sequence(
             Actions.delay((delay + bounceDelay) * 0.65f),
             Actions.run(() -> enableAllShapeClicks())
         ));
@@ -305,7 +315,7 @@ public class Grid {
         }
 
         // After all shapes have been removed, we can optionally reinitialize the grid or trigger a new round.
-        stage.addAction(Actions.sequence(
+        mainStage.addAction(Actions.sequence(
             Actions.delay(delay),  // Wait for all animations to complete
             Actions.run(() -> {
                 // Optionally: reinitialize the grid or trigger a new round here
