@@ -94,6 +94,7 @@ public class Grid {
     public void removeConnectedShapes(int x, int y, Shape.Type shapeType) {
         int levelScore = 0;
         float scoreModifier = 1.0005f;
+        int triggeredShapes = 0;
 
         disableAllShapeClicks();
 
@@ -160,6 +161,7 @@ public class Grid {
 
         // Process shapes grouped by distance sequentially
         for (float distance : distanceGroups.keySet()) {
+
             // calculate score
             levelScore += (1 * scoreModifier);
             scoreModifier = 1.1f + (distance * 0.05f); // Modifier grows based on distance
@@ -168,6 +170,7 @@ public class Grid {
             // For shapes at the same distance, remove them one by one, with the delay increasing slightly
             for (Shape shape : shapesAtDistance) {
                 float finalDelay = delay;
+                triggeredShapes++;
                 shape.addAction(Actions.delay(delay, Actions.run(() -> {
                     AssetLoader.bubbleSound.play(BaseGame.soundVolume, 0.8f + (2 * finalDelay), 0.0f);
                     shape.animatedRemove();
@@ -190,6 +193,8 @@ public class Grid {
         LevelScreen.score += levelScore;
         LevelScreen.topLabel.setText("" + LevelScreen.score);
         LevelScreen.topLabel.restart();
+        if (triggeredShapes == 1)
+            LevelScreen.looseHealth();
     }
 
 
