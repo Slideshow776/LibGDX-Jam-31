@@ -16,6 +16,7 @@ import no.sandramoen.libgdx31.gui.BaseProgressBar;
 import no.sandramoen.libgdx31.utils.AssetLoader;
 import no.sandramoen.libgdx31.utils.BaseGame;
 import no.sandramoen.libgdx31.utils.BaseScreen;
+import no.sandramoen.libgdx31.utils.GameUtils;
 
 
 public class LevelScreen extends BaseScreen {
@@ -30,6 +31,14 @@ public class LevelScreen extends BaseScreen {
 
 
     public LevelScreen() {
+        GameUtils.stopAllMusic();
+        AssetLoader.levelMusic.play();
+        AssetLoader.levelMusic.setVolume(BaseGame.musicVolume);
+        float songDuration = 85f;  // Replace with the actual duration of the music
+        float randomStartPosition = MathUtils.random(0f, songDuration);
+        AssetLoader.levelMusic.setPosition(randomStartPosition);
+        AssetLoader.levelMusic.setLooping(true);
+
         initializeActors();
         initializeGUI();
     }
@@ -120,7 +129,7 @@ public class LevelScreen extends BaseScreen {
         healthBar.incrementPercentage(100);
         healthBar.setProgressBarColor(Color.valueOf("de3a68"));
 
-        messageLabel = new TypingLabel("{CROWD}press 'R' to reincarnate", AssetLoader.getLabelStyle("Play-Bold59white"));
+        messageLabel = new TypingLabel("{CROWD}press '{RAINBOW}R{ENDRAINBOW}' to reincarnate", AssetLoader.getLabelStyle("Play-Bold59white"));
         messageLabel.getColor().a = 0.0f;
         messageLabel.setAlignment(Align.center);
 

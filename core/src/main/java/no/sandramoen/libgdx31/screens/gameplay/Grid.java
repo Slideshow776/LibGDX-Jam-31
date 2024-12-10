@@ -1,6 +1,7 @@
 package no.sandramoen.libgdx31.screens.gameplay;
 
 import no.sandramoen.libgdx31.actors.Shape;
+import no.sandramoen.libgdx31.screens.shell.LevelSelectScreen;
 import no.sandramoen.libgdx31.utils.AssetLoader;
 import no.sandramoen.libgdx31.utils.BaseGame;
 import space.earlygrey.shapedrawer.ShapeDrawer;
@@ -219,6 +220,14 @@ public class Grid {
             LevelScreen.gainHealth(20);
         else if (numSquaresTriggered >= 4)
             LevelScreen.gainHealth(10);
+
+        if (!areAnyShapesLeft()) {
+            clearBoard();
+            mainStage.addAction(Actions.sequence(
+                Actions.delay(2.0f),
+                Actions.run(() -> BaseGame.setActiveScreen(new LevelSelectScreen()))
+            ));
+        }
     }
 
 
@@ -348,6 +357,19 @@ public class Grid {
                 }
             }
         }
+    }
+
+
+    public boolean areAnyShapesLeft() {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                Shape shape = grid.get(x).get(y);
+                if (shape != null) {
+                    return true; // If we find a shape, return true
+                }
+            }
+        }
+        return false; // If no shapes are found, return false
     }
 
 

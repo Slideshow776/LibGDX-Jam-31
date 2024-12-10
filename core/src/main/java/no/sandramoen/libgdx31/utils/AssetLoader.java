@@ -30,9 +30,12 @@ public class AssetLoader implements AssetErrorListener {
     public static Sound healthLossSound;
     public static Sound heartbeatSound;
     public static Array<Sound> swordSounds;
+    public static Sound longHeartbeatSound;
+    public static Sound openDoorSound;
 
     public static Array<Music> music;
-    public static Music menuMusic;
+    public static Music levelMusic;
+    public static Music levelSelectMusic;
 
     public static Array<TiledMap> maps;
     public static TiledMap testMap;
@@ -67,7 +70,8 @@ public class AssetLoader implements AssetErrorListener {
         BaseGame.assetManager.load("images/included/packed/images.pack.atlas", TextureAtlas.class);
 
         // music
-        // menuMusic = assetManager.get("audio/music/587251__lagmusics__epic-and-aggressive-percussion.mp3", Music.class);
+        BaseGame.assetManager.load("audio/music/388340__phlair__dungeon-ambiance.ogg", Music.class);
+        BaseGame.assetManager.load("audio/music/512360__jackylacracotte__epic-ambient-track.ogg", Music.class);
 
         // sounds
         BaseGame.assetManager.load("audio/sound/click1.wav", Sound.class);
@@ -79,6 +83,8 @@ public class AssetLoader implements AssetErrorListener {
         for (int i = 0; i <= 13; i++) {
             BaseGame.assetManager.load("audio/sound/sword sounds/" + i + ".ogg", Sound.class);
         }
+        BaseGame.assetManager.load("audio/sound/149834__latzii__heartbeat_long.wav", Sound.class);
+        BaseGame.assetManager.load("audio/sound/open door sound.ogg", Sound.class);
 
         // i18n
 
@@ -106,8 +112,10 @@ public class AssetLoader implements AssetErrorListener {
 
         // music
         music = new Array();
-        // menuMusic = assetManager.get("audio/music/587251__lagmusics__epic-and-aggressive-percussion.mp3", Music.class);
-        // music.add(menuMusic);
+        levelSelectMusic = BaseGame.assetManager.get("audio/music/388340__phlair__dungeon-ambiance.ogg", Music.class);
+        music.add(levelSelectMusic);
+        levelMusic = BaseGame.assetManager.get("audio/music/512360__jackylacracotte__epic-ambient-track.ogg", Music.class);
+        music.add(levelMusic);
 
         // sounds
         click1Sound = BaseGame.assetManager.get("audio/sound/click1.wav", Sound.class);
@@ -121,6 +129,8 @@ public class AssetLoader implements AssetErrorListener {
             Sound sound = BaseGame.assetManager.get("audio/sound/sword sounds/" + i + ".ogg", Sound.class);
             swordSounds.add(sound);
         }
+        longHeartbeatSound = BaseGame.assetManager.get("audio/sound/149834__latzii__heartbeat_long.wav", Sound.class);
+        openDoorSound = BaseGame.assetManager.get("audio/sound/open door sound.ogg", Sound.class);
 
         // i18n
 
