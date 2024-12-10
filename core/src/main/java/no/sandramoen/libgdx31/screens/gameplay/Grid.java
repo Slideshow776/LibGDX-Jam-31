@@ -94,7 +94,7 @@ public class Grid {
         int levelScore = 0;
         float scoreModifier = 1.0005f;
         int triggeredShapes = 0;
-        int numCirclesTriggered = 0;
+        int numSquaresTriggered = 0;
 
         disableAllShapeClicks();
 
@@ -178,8 +178,8 @@ public class Grid {
                 // Immediately set the grid position to null as the shape is marked for removal
                 Vector2 shapePosition = shape.getGridPosition();
                 grid.get((int) shapePosition.x).set((int) shapePosition.y, null);
-                if (shape.type == Shape.Type.CIRCLE)
-                    numCirclesTriggered++;
+                if (shape.type == Shape.Type.SQUARE)
+                    numSquaresTriggered++;
             }
 
             // After processing shapes at this distance, increase the delay for the next group
@@ -199,7 +199,7 @@ public class Grid {
 
         if (triggeredShapes == 1)
             LevelScreen.looseHealth();
-        if (numCirclesTriggered >= 4)
+        if (numSquaresTriggered >= 4)
             LevelScreen.gainHealth();
     }
 
