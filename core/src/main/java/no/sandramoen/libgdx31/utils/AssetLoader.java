@@ -11,7 +11,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import com.github.tommyettinger.textra.Styles;
@@ -29,6 +28,7 @@ public class AssetLoader implements AssetErrorListener {
     public static Sound bubbleSound;
     public static Sound gongSound;
     public static Sound healthLossSound;
+    public static Sound heartbeatSound;
 
     public static Array<Music> music;
     public static Music menuMusic;
@@ -74,6 +74,7 @@ public class AssetLoader implements AssetErrorListener {
         BaseGame.assetManager.load("audio/sound/104940__glaneur-de-sons__bubble-1.ogg", Sound.class);
         BaseGame.assetManager.load("audio/sound/486629__jenszygar__gong-brilliant-paiste-32.ogg", Sound.class);
         BaseGame.assetManager.load("audio/sound/563916__gemesil__bad-omen.ogg", Sound.class);
+        BaseGame.assetManager.load("audio/sound/149834__latzii__heartbeat.ogg", Sound.class);
 
         // i18n
 
@@ -110,6 +111,7 @@ public class AssetLoader implements AssetErrorListener {
         bubbleSound = BaseGame.assetManager.get("audio/sound/104940__glaneur-de-sons__bubble-1.ogg", Sound.class);
         gongSound = BaseGame.assetManager.get("audio/sound/486629__jenszygar__gong-brilliant-paiste-32.ogg", Sound.class);
         healthLossSound = BaseGame.assetManager.get("audio/sound/563916__gemesil__bad-omen.ogg", Sound.class);
+        heartbeatSound = BaseGame.assetManager.get("audio/sound/149834__latzii__heartbeat.ogg", Sound.class);
 
         // i18n
 

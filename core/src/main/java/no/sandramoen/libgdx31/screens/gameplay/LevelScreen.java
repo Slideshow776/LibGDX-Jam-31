@@ -1,5 +1,7 @@
 package no.sandramoen.libgdx31.screens.gameplay;
 
+import static no.sandramoen.libgdx31.utils.AssetLoader.heartbeatSound;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
@@ -74,6 +76,23 @@ public class LevelScreen extends BaseScreen {
             Actions.fadeIn(5.0f)
         ));
     }
+
+
+    public static void gainHealth() {
+        if (healthBar.level >= 100)
+            return;
+
+        // Increment health by 10
+        healthBar.incrementPercentage(10);
+
+        // Calculate volume based on current health level, making it louder as health decreases
+        float volume = BaseGame.soundVolume * 1.0f + (1.0f - (healthBar.level / 100.0f)) * 0.5f;
+        System.out.println(volume);
+
+        // Play the heartbeat sound with a random pitch between 0.8 and 1.2
+        heartbeatSound.play(volume, MathUtils.random(0.8f, 1.2f), 0.0f);
+    }
+
 
 
     private void initializeActors() {

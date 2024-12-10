@@ -94,6 +94,7 @@ public class Grid {
         int levelScore = 0;
         float scoreModifier = 1.0005f;
         int triggeredShapes = 0;
+        int numCirclesTriggered = 0;
 
         disableAllShapeClicks();
 
@@ -171,12 +172,14 @@ public class Grid {
                 float finalDelay = delay;
                 triggeredShapes++;
                 shape.addAction(Actions.delay(delay, Actions.run(() -> {
-                    AssetLoader.bubbleSound.play(BaseGame.soundVolume, 0.8f + (2 * finalDelay), 0.0f);
+                    AssetLoader.bubbleSound.play(BaseGame.soundVolume, 0.8f + (finalDelay), 0.0f);
                     shape.animatedRemove();
                 })));
                 // Immediately set the grid position to null as the shape is marked for removal
                 Vector2 shapePosition = shape.getGridPosition();
                 grid.get((int) shapePosition.x).set((int) shapePosition.y, null);
+                if (shape.type == Shape.Type.CIRCLE)
+                    numCirclesTriggered++;
             }
 
             // After processing shapes at this distance, increase the delay for the next group
@@ -192,8 +195,11 @@ public class Grid {
         LevelScreen.score += levelScore;
         LevelScreen.scoreLabel.setText("" + LevelScreen.score);
         LevelScreen.scoreLabel.restart();
+
         if (triggeredShapes == 1)
             LevelScreen.looseHealth();
+        if (numCirclesTriggered >= 4)
+            LevelScreen.gainHealth();
     }
 
 
