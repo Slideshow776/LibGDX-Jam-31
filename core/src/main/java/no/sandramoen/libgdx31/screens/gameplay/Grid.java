@@ -198,8 +198,12 @@ public class Grid {
 
         if (triggeredShapes == 1)
             LevelScreen.looseHealth();
+        if (numSquaresTriggered >= 12)
+            LevelScreen.gainHealth(30);
+        if (numSquaresTriggered >= 8)
+            LevelScreen.gainHealth(20);
         if (numSquaresTriggered >= 4)
-            LevelScreen.gainHealth();
+            LevelScreen.gainHealth(10);
     }
 
 
