@@ -6,6 +6,7 @@ import no.sandramoen.libgdx31.utils.BaseGame;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -82,7 +83,8 @@ public class Grid {
                 ));
                 stage.addAction(Actions.sequence(
                     Actions.delay(delay),
-                    Actions.run(() -> AssetLoader.bubbleSound.play(BaseGame.soundVolume * 0.5f, 0.4f + (1.25f * delay), 0.0f))
+                    // Actions.run(() -> AssetLoader.bubbleSound.play(BaseGame.soundVolume * 0.5f, 0.4f + (1.25f * delay), 0.0f))
+                    Actions.run(() -> AssetLoader.swordSounds.get(MathUtils.random(0, 13)).play(BaseGame.soundVolume * 0.5f, 0.4f + (1.25f * delay), 0.0f))
                 ));
             }
             grid.add(column); // Add the column of shapes to the grid
@@ -152,7 +154,7 @@ public class Grid {
 
         // Now, we will process each group of shapes based on their distance from the clicked shape
         float delay = 0.1f;  // Initial delay for shapes at distance 1
-        float delayIncrement = 0.05f;  // Delay increment to speed up as we move further away from the clicked shape
+        float delayIncrement = 0.1f;  // Delay increment to speed up as we move further away from the clicked shape
 
         // Start with the clicked shape
         Shape clickedShape = grid.get(x).get(y);
@@ -172,7 +174,8 @@ public class Grid {
                 float finalDelay = delay;
                 triggeredShapes++;
                 shape.addAction(Actions.delay(delay, Actions.run(() -> {
-                    AssetLoader.bubbleSound.play(BaseGame.soundVolume, 0.8f + (finalDelay), 0.0f);
+                    AssetLoader.swordSounds.get(MathUtils.random(0, 13)).play(BaseGame.soundVolume, 0.3f + (finalDelay * 0.8f), 0.0f);
+                    //AssetLoader.bubbleSound.play(BaseGame.soundVolume, 0.8f + (finalDelay), 0.0f);
                     shape.animatedRemove();
                 })));
                 // Immediately set the grid position to null as the shape is marked for removal
@@ -199,11 +202,12 @@ public class Grid {
 
         if (triggeredShapes == 1)
             LevelScreen.looseHealth();
+
         if (numSquaresTriggered >= 12)
             LevelScreen.gainHealth(30);
-        if (numSquaresTriggered >= 8)
+        else if (numSquaresTriggered >= 8)
             LevelScreen.gainHealth(20);
-        if (numSquaresTriggered >= 4)
+        else if (numSquaresTriggered >= 4)
             LevelScreen.gainHealth(10);
     }
 

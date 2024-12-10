@@ -85,7 +85,7 @@ public class LevelScreen extends BaseScreen {
         healthBar.incrementPercentage(healthGained);
 
         // Calculate volume based on current health level, making it louder as health decreases
-        float volume = BaseGame.soundVolume * 1.0f + (1.0f - (healthBar.level / 100.0f)) * 0.5f;
+        float volume = BaseGame.soundVolume * 1.5f + (1.0f - (healthBar.level / 100.0f)) * 0.5f;
         System.out.println(volume);
 
         // Play the heartbeat sound with a random pitch between 0.8 and 1.2

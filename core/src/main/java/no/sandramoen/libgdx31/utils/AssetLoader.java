@@ -29,6 +29,7 @@ public class AssetLoader implements AssetErrorListener {
     public static Sound gongSound;
     public static Sound healthLossSound;
     public static Sound heartbeatSound;
+    public static Array<Sound> swordSounds;
 
     public static Array<Music> music;
     public static Music menuMusic;
@@ -75,6 +76,9 @@ public class AssetLoader implements AssetErrorListener {
         BaseGame.assetManager.load("audio/sound/486629__jenszygar__gong-brilliant-paiste-32.ogg", Sound.class);
         BaseGame.assetManager.load("audio/sound/563916__gemesil__bad-omen.ogg", Sound.class);
         BaseGame.assetManager.load("audio/sound/149834__latzii__heartbeat.ogg", Sound.class);
+        for (int i = 0; i <= 13; i++) {
+            BaseGame.assetManager.load("audio/sound/sword sounds/" + i + ".ogg", Sound.class);
+        }
 
         // i18n
 
@@ -112,6 +116,11 @@ public class AssetLoader implements AssetErrorListener {
         gongSound = BaseGame.assetManager.get("audio/sound/486629__jenszygar__gong-brilliant-paiste-32.ogg", Sound.class);
         healthLossSound = BaseGame.assetManager.get("audio/sound/563916__gemesil__bad-omen.ogg", Sound.class);
         heartbeatSound = BaseGame.assetManager.get("audio/sound/149834__latzii__heartbeat.ogg", Sound.class);
+        swordSounds = new Array();
+        for (int i = 0; i <= 13; i++) {
+            Sound sound = BaseGame.assetManager.get("audio/sound/sword sounds/" + i + ".ogg", Sound.class);
+            swordSounds.add(sound);
+        }
 
         // i18n
 
