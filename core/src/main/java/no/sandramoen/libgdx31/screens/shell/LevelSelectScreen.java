@@ -95,7 +95,7 @@ public class LevelSelectScreen extends BaseScreen {
                 @Override
                 public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                     System.out.println(direction);
-                    BaseGame.setActiveScreen(new LevelScreen());
+                    BaseGame.setActiveScreen(new LevelScreen(direction));
                     return true;
                 }
 

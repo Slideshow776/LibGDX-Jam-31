@@ -39,9 +39,9 @@ public class BaseProgressBar extends BaseActor {
         label.setAlignment(Align.center);
         label.skipToTheEnd(true, true);
         label.setColor(new Color(0.922f, 0.929f, 0.914f, 1f)); // white
-        label.setPosition(
+       /* label.setPosition(
             getWidth() * 0.5f - label.getFont().calculateSize(label.getWorkingLayout()) * 0.5f,
-            getHeight() * 0.55f);
+            -getHeight() * 2.1f);*/
         addActor(label);
 
         // Just shows where the exact center of the bar is.

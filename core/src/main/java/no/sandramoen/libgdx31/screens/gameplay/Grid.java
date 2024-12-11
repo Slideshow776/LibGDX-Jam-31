@@ -26,11 +26,11 @@ public class Grid {
     private Stage mainStage;
     private Stage uiStage;
 
-    public Grid(int width, int height, Stage mainStage, Stage uiStage, ShapeDrawer shapeDrawer, float spacing, Array<Float> margins) {
+    public Grid(int width, int height, Stage mainStage, Stage uiStage, ShapeDrawer shapeDrawer, float spacing, Array<Float> margins, String direction) {
         this.width = width;
         this.height = height;
         this.mainStage = mainStage;
-        this.uiStage= uiStage;
+        this.uiStage = uiStage;
         this.spacing = spacing;
 
         grid = new Array<>(width);
@@ -51,9 +51,9 @@ public class Grid {
         float availableHeight = BaseGame.WORLD_HEIGHT - (marginTop + marginBottom);
 
         // Calculate cell size considering spacing and margins
-        float cellWidth = (availableWidth - (spacing * (width - 1))) / width;  // Available width minus spacing between columns
-        float cellHeight = (availableHeight - (spacing * (height - 1))) / height; // Available height minus spacing between rows
-        float cellSize = Math.min(cellWidth, cellHeight); // Ensure cells are square by taking the minimum size
+        float cellWidth = (availableWidth - (spacing * (width - 1))) / width;
+        float cellHeight = (availableHeight - (spacing * (height - 1))) / height;
+        float cellSize = Math.min(cellWidth, cellHeight);
 
         // Calculate offsets to center the grid in the available space
         float offsetX = marginLeft + (availableWidth - (width * cellSize + (spacing * (width - 1)))) / 2f;
@@ -67,33 +67,63 @@ public class Grid {
             for (int y = 0; y < height; y++) {
 
                 // Calculate the shape position within each grid cell, considering spacing and margins
-                float posX = offsetX + x * (cellSize + spacing); // Account for spacing
-                float posY = offsetY + y * (cellSize + spacing); // Account for spacing
+                float posX = offsetX + x * (cellSize + spacing);
+                float posY = offsetY + y * (cellSize + spacing);
 
-                // Randomly assign a shape type (CIRCLE, SQUARE, TRIANGLE, STAR)
-                Shape.Type randomType = Shape.Type.values()[(int) (Math.random() * Shape.Type.values().length)];
-                Shape shape = new Shape(posX, posY, mainStage, shapeDrawer, randomType, cellSize, this);
+                // Determine shape type based on direction
+                Shape.Type shapeType;
+                double randomValue = Math.random(); // Random value between 0 and 1
+
+                switch (direction.toLowerCase()) {
+                    case "up":
+                        shapeType = (randomValue < 0.334) ? Shape.Type.SQUARE : getRandomTypeExcluding(Shape.Type.SQUARE);
+                        break;
+                    case "left":
+                        shapeType = (randomValue < 0.334) ? Shape.Type.STAR : getRandomTypeExcluding(Shape.Type.STAR);
+                        break;
+                    case "right":
+                        shapeType = (randomValue < 0.334) ? Shape.Type.CIRCLE : getRandomTypeExcluding(Shape.Type.CIRCLE);
+                        break;
+                    case "down":
+                        shapeType = (randomValue < 0.334) ? Shape.Type.TRIANGLE : getRandomTypeExcluding(Shape.Type.TRIANGLE);
+                        break;
+                    default:
+                        shapeType = Shape.Type.values()[(int) (Math.random() * Shape.Type.values().length)];
+                }
+
+                // Create and configure the shape
+                Shape shape = new Shape(posX, posY, mainStage, shapeDrawer, shapeType, cellSize, this);
 
                 // Set grid position to help track where the shape is
                 shape.setGridPosition(x, y);
-                column.add(shape); // Add the shape to the column
+                column.add(shape);
 
                 // Stagger animation for each row
-                float delay = baseDelay * y; // Delay increases with row index
-                shape.setScale(0f); // Start with scale 0
+                float delay = baseDelay * y;
+                shape.setScale(0f);
                 shape.addAction(Actions.sequence(
                     Actions.delay(delay),
-                    Actions.scaleTo(1f, 1f, 0.2f, Interpolation.sineOut) // Smooth scale-in animation
+                    Actions.scaleTo(1f, 1f, 0.2f, Interpolation.sineOut)
                 ));
                 mainStage.addAction(Actions.sequence(
                     Actions.delay(delay),
-                    // Actions.run(() -> AssetLoader.bubbleSound.play(BaseGame.soundVolume * 0.5f, 0.4f + (1.25f * delay), 0.0f))
                     Actions.run(() -> AssetLoader.swordSounds.get(MathUtils.random(0, 13)).play(BaseGame.soundVolume * 0.5f, 0.4f + (1.25f * delay), 0.0f))
                 ));
             }
-            grid.add(column); // Add the column of shapes to the grid
+            grid.add(column);
         }
     }
+
+    // Helper method to get a random shape type excluding a specific type
+    private Shape.Type getRandomTypeExcluding(Shape.Type excludedType) {
+        Shape.Type[] types = Shape.Type.values();
+        Shape.Type randomType;
+        do {
+            randomType = types[(int) (Math.random() * types.length)];
+        } while (randomType == excludedType);
+        return randomType;
+    }
+
 
 
     public void removeConnectedShapes(int x, int y, Shape.Type shapeType) {
