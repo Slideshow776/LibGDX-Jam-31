@@ -1,17 +1,24 @@
 package no.sandramoen.libgdx31.actors;
 
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
+import com.badlogic.gdx.utils.compression.lzma.Base;
 
 import no.sandramoen.libgdx31.screens.gameplay.Grid;
+import no.sandramoen.libgdx31.screens.gameplay.LevelScreen;
+import no.sandramoen.libgdx31.utils.AssetLoader;
 import no.sandramoen.libgdx31.utils.BaseActor;
+import no.sandramoen.libgdx31.utils.BaseGame;
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
@@ -130,12 +137,17 @@ public class Shape extends BaseActor {
 
     public void setClickable(boolean clickable) {
         this.clickable = clickable;
+
         if (clickable) {
-            addListener(onShapeClicked()); // Re-attach click listener if clickable
+            // Only add the listener if it hasn't been added already
+            if (getListeners().isEmpty()) {
+                addListener(onShapeClicked());
+            }
         } else {
-            removeListener(onShapeClicked()); // Remove click listener if not clickable
+            removeListener(onShapeClicked());
         }
     }
+
 
 
     private Vector2 getCenter() {
@@ -150,12 +162,56 @@ public class Shape extends BaseActor {
         return new InputListener() {
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (clickable) {
+                if (!clickable)
+                    return false;
+
+                if (button == Input.Buttons.LEFT) {
                     grid.removeConnectedShapes(gridX, gridY, type);
+                } else if (button == Input.Buttons.RIGHT && BaseGame.mana >= 10) {
+                    LevelScreen.looseMana(10);
+                    changeType();
+                } else if (button == Input.Buttons.RIGHT && BaseGame.mana == 0) {
+                    AssetLoader.manaEmptySound.play(BaseGame.soundVolume, MathUtils.random(0.9f, 1.1f), 0.0f);
                 }
                 return true;
             }
         };
+    }
+
+
+    public void changeType() {
+        Type newType = null;
+        switch (type) {
+            case SQUARE:  // red
+                newType = Type.TRIANGLE;  // blue
+                break;
+            case TRIANGLE:  // blue
+                newType = Type.CIRCLE;  // green
+                break;
+            case CIRCLE:  // green
+                newType = Type.STAR;  // yellow
+                break;
+            case STAR:  // yellow
+                newType = Type.SQUARE;  // red
+                break;
+        }
+
+        // Animate the size change (scale down to 0, then scale up to the new shape)
+        Type finalNewType = newType;
+        addAction(
+            Actions.sequence(
+                Actions.scaleTo(0.0f, 0.0f, 0.2f, Interpolation.fade), // Scale down to 0
+                Actions.run(new Runnable() {
+                    @Override
+                    public void run() {
+                        type = finalNewType; // Change the type here
+                        // Update the color and other properties specific to the new type if needed
+                        setSize(getWidth(), getHeight()); // Reapply original size for the new shape type
+                    }
+                }),
+                Actions.scaleTo(1.0f, 1.0f, 0.2f, Interpolation.fade) // Scale back up to normal size
+            )
+        );
     }
 
 

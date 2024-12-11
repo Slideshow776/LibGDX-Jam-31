@@ -30,6 +30,7 @@ public class LevelScreen extends BaseScreen {
     public static TypingLabel messageLabel;
 
     private static BaseProgressBar healthBar;
+    private static BaseProgressBar manaBar;
     private static Grid grid;
     private String direction;
 
@@ -73,10 +74,29 @@ public class LevelScreen extends BaseScreen {
     }
 
 
-    public static void looseHealth() {
-        healthBar.decrementPercentage(10);
+    public static void looseMana(int amount) {
+        manaBar.decrementPercentage(amount);
+        AssetLoader.manaUseSound.play(BaseGame.soundVolume, MathUtils.random(0.9f, 1.1f), 0.0f);
+        BaseGame.mana = manaBar.level;
+    }
+
+
+    public static void gainMana(int amount) {
+        if (amount + manaBar.level > 100) {
+            System.out.println("TODO: implement mana surge damage effects");
+            healthBar.decrementPercentage(((amount * 10) + manaBar.level) - 100);
+            looseHealth(((amount * 10) + manaBar.level) - 100);
+            AssetLoader.manaSurgeSound.play(BaseGame.soundVolume);
+        }
+        manaBar.incrementPercentage(amount * 10);
+        BaseGame.mana = manaBar.level;
+    }
+
+
+    public static void looseHealth(int amount) {
+        healthBar.decrementPercentage(amount);
         BaseGame.health = healthBar.level;
-        if (healthBar.level >= 10) {
+        if (healthBar.level >= 1) {
             // Calculate pitch based on the level, ranging from 0.8 to 1.2
             float pitch = 1.2f - ((healthBar.level - 10) / 100.0f) * (1.2f - 0.8f);  // Linearly map level to pitch between 0.8 and 1.2
             AssetLoader.healthLossSound.play(BaseGame.soundVolume, pitch, 0.0f);
@@ -134,9 +154,19 @@ public class LevelScreen extends BaseScreen {
         scoreLabel.setAlignment(Align.center);
 
         healthBar = new BaseProgressBar(0, 0, uiStage);
+        healthBar.animationDuration = 1.0f;
         healthBar.incrementPercentage(BaseGame.health);
+        healthBar.animationDuration = 0.25f;
         healthBar.setColor(Color.valueOf("780c72"));
         healthBar.setProgressBarColor(Color.valueOf("de3a68"));
+
+        manaBar = new BaseProgressBar(0, 2, uiStage);
+        manaBar.setProgress(100);
+        manaBar.animationDuration = 1.0f;
+        manaBar.decrementPercentage(100 - BaseGame.mana);
+        manaBar.animationDuration = 0.25f;
+        manaBar.setColor(Color.valueOf("2c1861"));
+        manaBar.setProgressBarColor(Color.valueOf("69f7ff"));
 
         messageLabel = new TypingLabel("{CROWD}press '{RAINBOW}R{ENDRAINBOW}' to reincarnate", AssetLoader.getLabelStyle("Play-Bold59white"));
         messageLabel.getColor().a = 0.0f;
@@ -148,15 +178,18 @@ public class LevelScreen extends BaseScreen {
 
         uiTable.add(scoreLabel)
             .height(scoreLabel.getPrefHeight() * 1.5f)
-            //.expandY()
             .top()
             .align(Align.top)
             .row()
         ;
 
         uiTable.add(healthBar)
-            .expandY()
             .top()
+            .row();
+
+        uiTable.add(manaBar)
+            .top()
+            .expandY()
             .row();
 
         uiTable.add(messageLabel)

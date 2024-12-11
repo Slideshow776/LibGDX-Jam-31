@@ -135,6 +135,7 @@ public class Grid {
         float scoreModifier = 1.0005f;
         int triggeredShapes = 0;
         int numSquaresTriggered = 0;
+        int numTrianglesTriggered = 0;
 
         disableAllShapeClicks();
 
@@ -205,7 +206,9 @@ public class Grid {
             // calculate score
             float thisScore = (1 * scoreModifier);
             if (clickedShape.type == Shape.Type.STAR)
-                thisScore *= 2.0;
+                thisScore *= 4.0;
+            if (clickedShape.type == Shape.Type.TRIANGLE && BaseGame.mana == 100)
+                thisScore *= 0;
             levelScore += thisScore;
             scoreModifier = 1.1f + (distance * 0.5f); // Modifier grows based on distance
             Array<Shape> shapesAtDistance = distanceGroups.get(distance);
@@ -224,7 +227,10 @@ public class Grid {
                     Styles.LabelStyle style = AssetLoader.getLabelStyle("Play-Bold20white");
                     // This is sometimes needed when a Viewport uses 1 unit to mean "1 Mario" or "1 Sonic".
                     style.font.scaleHeightTo(0.2f * finalThisScore);
-                    style.fontColor = Color.LIGHT_GRAY;
+                    if (clickedShape.type == Shape.Type.STAR)
+                        style.fontColor = Color.valueOf("ffe785");
+                    else
+                        style.fontColor = Color.valueOf("f2fffe");
                     TypingLabel label = new TypingLabel("" + (int) finalThisScore, style);
                     label.setPosition(shape.getX() + shape.getWidth() * 0.5f,
                                       shape.getY() + shape.getHeight() * 0.5f,
@@ -239,6 +245,8 @@ public class Grid {
                 grid.get((int) shapePosition.x).set((int) shapePosition.y, null);
                 if (shape.type == Shape.Type.SQUARE)
                     numSquaresTriggered++;
+                else if (shape.type == Shape.Type.TRIANGLE)
+                    numTrianglesTriggered++;
             }
 
             // After processing shapes at this distance, increase the delay for the next group
@@ -257,7 +265,7 @@ public class Grid {
         LevelScreen.scoreLabel.invalidateHierarchy();
 
         if (triggeredShapes == 1)
-            LevelScreen.looseHealth();
+            LevelScreen.looseHealth(10);
 
         if (numSquaresTriggered >= 12)
             LevelScreen.gainHealth(30);
@@ -265,6 +273,8 @@ public class Grid {
             LevelScreen.gainHealth(20);
         else if (numSquaresTriggered >= 4)
             LevelScreen.gainHealth(10);
+
+        LevelScreen.gainMana(numTrianglesTriggered);
 
         if (!areAnyShapesLeft()) {
             clearBoard();
@@ -437,5 +447,44 @@ public class Grid {
             System.out.println(row.toString());
         }
     }
+
+    public void printBoardType() {
+        // Iterate over each row of the grid from top to bottom
+        for (int y = height - 1; y >= 0; y--) {  // Start from the top (y = height - 1)
+            StringBuilder row = new StringBuilder();
+
+            for (int x = 0; x < width; x++) {
+                Shape shape = grid.get(x).get(y);
+
+                // Print a letter for the shape type, or ' ' for an empty cell
+                if (shape != null) {
+                    char shapeChar;
+                    switch (shape.type) {
+                        case SQUARE:
+                            shapeChar = 'S';  // 'S' for square
+                            break;
+                        case CIRCLE:
+                            shapeChar = 'C';  // 'C' for circle
+                            break;
+                        case TRIANGLE:
+                            shapeChar = 'T';  // 'T' for triangle
+                            break;
+                        case STAR:
+                            shapeChar = 'X';  // 'X' for star (or any other shape)
+                            break;
+                        default:
+                            shapeChar = ' ';  // Default to space if no shape type
+                    }
+                    row.append(shapeChar + " ");  // Add the character for the shape
+                } else {
+                    row.append("  ");  // Empty cell (two spaces for alignment)
+                }
+            }
+            // Print the constructed row
+            System.out.println(row.toString());
+        }
+    }
+
+
 }
 

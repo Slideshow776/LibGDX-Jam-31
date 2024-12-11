@@ -16,6 +16,7 @@ import no.sandramoen.libgdx31.utils.BaseActor;
 public class BaseProgressBar extends BaseActor {
 
     public int level = 0; // Store level as an integer from 0 to 100
+    public float animationDuration = 0.25f;
 
     private BaseActor progress;
     private TypingLabel label;
@@ -46,7 +47,7 @@ public class BaseProgressBar extends BaseActor {
        /* label.setPosition(
             getWidth() * 0.5f - label.getFont().calculateSize(label.getWorkingLayout()) * 0.5f,
             -getHeight() * 2.1f);*/
-        label.setVisible(false);
+        label.setVisible(true);
         addActor(label);
 
         // Just shows where the exact center of the bar is.
@@ -58,14 +59,25 @@ public class BaseProgressBar extends BaseActor {
 
     }
 
+
+    public void setProgress(int percentage) {
+        level = Math.min(level + percentage, 100);
+        float newWidth = (float) level / 100 * getWidth();
+        progress.setSize(newWidth, getHeight());
+    }
+
+
     // Increment the progress bar by a certain percentage (in integer values)
     public void incrementPercentage(int percentage) {
+        if (percentage == 0)
+            return;
+
         // Make sure the percentage is within the valid range [0, 100]
         level = Math.min(level + percentage, 100); // Clamp to 100%
 
         // Calculate the new width based on the level percentage
         float newWidth = (float) level / 100 * getWidth();
-        progress.addAction(Actions.sizeTo(newWidth, getHeight(), 0.25f));
+        progress.addAction(Actions.sizeTo(newWidth, getHeight(), animationDuration));
 
         // Update the label with the new level
         label.setText(level + " / 100", true);
@@ -91,7 +103,7 @@ public class BaseProgressBar extends BaseActor {
 
         // Calculate the new width based on the level percentage
         float newWidth = (float) level / 100 * getWidth();
-        progress.addAction(Actions.sizeTo(newWidth, getHeight(), 0.25f));
+        progress.addAction(Actions.sizeTo(newWidth, getHeight(), animationDuration));
 
         Action action = Actions.sequence(
             Actions.delay(0.2f),
