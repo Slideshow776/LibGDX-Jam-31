@@ -109,7 +109,7 @@ public class LevelScreen extends BaseScreen {
 
 
     private void initializeActors() {
-        new Background(0, 0, mainStage, new Vector3(.06f, .06f, .06f));
+        new Background(0, 0, mainStage, direction);
 
         int gridWidth = 7;  // Number of columns
         int gridHeight = 9; // Number of rows

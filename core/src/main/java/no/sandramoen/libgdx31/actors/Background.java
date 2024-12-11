@@ -1,6 +1,7 @@
 package no.sandramoen.libgdx31.actors;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.glutils.ShaderProgram;
 import com.badlogic.gdx.math.Vector2;
@@ -23,7 +24,7 @@ public class Background extends BaseActor {
     public boolean increaseSpeed = false;
     public boolean decreaseSpeed = false;
 
-    public Background(float x, float y, Stage s, Vector3 colour) {
+    public Background(float x, float y, Stage s, String direction) {
         super(x, y, s);
         loadImage("whitePixel");
 
@@ -37,7 +38,16 @@ public class Background extends BaseActor {
         if (!shaderProgram.isCompiled()) {
             Gdx.app.error("Background", "Shader compile error: " + shaderProgram.getLog());
         }
-        this.colour = colour;
+
+        float strength = 0.05f;
+        if (direction == "up")
+            this.colour = new Vector3(strength, 0.0f, 0.0f);
+        else if (direction == "right")
+            this.colour = new Vector3(0.0f, strength, 0.0f);
+        else if (direction == "down")
+            this.colour = new Vector3(0.0f, 0.0f, strength);
+        else if (direction == "left")
+            this.colour = new Vector3(strength, strength, 0.0f);
     }
 
     @Override

@@ -203,8 +203,9 @@ public class Grid {
         for (float distance : distanceGroups.keySet()) {
 
             // calculate score
-            levelScore += (1 * scoreModifier);
-            scoreModifier = 1.1f + (distance * 0.05f); // Modifier grows based on distance
+            float thisScore = (1 * scoreModifier);
+            levelScore += thisScore;
+            scoreModifier = 1.1f + (distance * 0.5f); // Modifier grows based on distance
             Array<Shape> shapesAtDistance = distanceGroups.get(distance);
 
             // For shapes at the same distance, remove them one by one, with the delay increasing slightly
@@ -215,21 +216,21 @@ public class Grid {
                     AssetLoader.swordSounds.get(MathUtils.random(0, 13)).play(BaseGame.soundVolume, 0.3f + (finalDelay * 0.8f), 0.0f);
                     //AssetLoader.bubbleSound.play(BaseGame.soundVolume, 0.8f + (finalDelay), 0.0f);
                     shape.animatedRemove();
+
+                    // feature TODO: label that shows the score you get.
+                    Styles.LabelStyle style = AssetLoader.getLabelStyle("Play-Bold20white");
+                    // This is sometimes needed when a Viewport uses 1 unit to mean "1 Mario" or "1 Sonic".
+                    style.font.scaleHeightTo(0.2f * thisScore);
+                    style.fontColor = Color.LIGHT_GRAY;
+                    TypingLabel label = new TypingLabel("" + (int)thisScore, style);
+                    label.setPosition(shape.getX() + shape.getWidth() * 0.5f,
+                                      shape.getY() + shape.getHeight() * 0.5f,
+                                      Align.center);
+                    label.setTouchable(Touchable.disabled);
+                    mainStage.addActor(label);
+                    label.addAction(Actions.sequence(Actions.parallel(Actions.moveBy(MathUtils.randomTriangular(0.8f), 1.5f + MathUtils.randomTriangular(0.4f), 2f), Actions.fadeOut(2f)), Actions.removeActor()));
+
                 })));
-
-                // feature TODO: label that shows the score you get.
-                Styles.LabelStyle style = AssetLoader.getLabelStyle("Play-Bold20white");
-                // This is sometimes needed when a Viewport uses 1 unit to mean "1 Mario" or "1 Sonic".
-                style.font.scaleHeightTo(1f);
-                style.fontColor = Color.LIGHT_GRAY;
-                TypingLabel label = new TypingLabel("0", style);
-                label.setPosition(shape.getX() + shape.getWidth() * 0.5f,
-                                  shape.getY() + shape.getHeight() * 0.5f,
-                                  Align.center);
-                label.setTouchable(Touchable.disabled);
-                mainStage.addActor(label);
-                label.addAction(Actions.sequence(Actions.parallel(Actions.moveBy(MathUtils.randomTriangular(0.8f), 1.5f + MathUtils.randomTriangular(0.4f), 2f), Actions.fadeOut(2f)), Actions.removeActor()));
-
                 // Immediately set the grid position to null as the shape is marked for removal
                 Vector2 shapePosition = shape.getGridPosition();
                 grid.get((int) shapePosition.x).set((int) shapePosition.y, null);
