@@ -135,6 +135,7 @@ public class LevelScreen extends BaseScreen {
 
         healthBar = new BaseProgressBar(0, 0, uiStage);
         healthBar.incrementPercentage(BaseGame.health);
+        healthBar.setColor(Color.valueOf("780c72"));
         healthBar.setProgressBarColor(Color.valueOf("de3a68"));
 
         messageLabel = new TypingLabel("{CROWD}press '{RAINBOW}R{ENDRAINBOW}' to reincarnate", AssetLoader.getLabelStyle("Play-Bold59white"));

@@ -2,6 +2,8 @@ package no.sandramoen.libgdx31.gui;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
@@ -25,11 +27,13 @@ public class BaseProgressBar extends BaseActor {
         setColor(new Color(0.035f, 0.039f, 0.078f, 1f));
         setSize(Gdx.graphics.getWidth() * 0.9f, Gdx.graphics.getHeight() * 0.05f);
         setPosition(x, y - getHeight());
+        setOrigin(Align.center);
 
         progress = new BaseActor(0f, 0f, stage);
         progress.loadImage("whitePixel");
         progress.setColor(new Color(0.875f, 0.518f, 0.647f, 1f)); // light pink
         progress.setSize(0.0f, getHeight());
+        progress.setOrigin(Align.center);
         addActor(progress);
 
         Styles.LabelStyle levelStyle = AssetLoader.getLabelStyle("Play-Bold59white");
@@ -42,6 +46,7 @@ public class BaseProgressBar extends BaseActor {
        /* label.setPosition(
             getWidth() * 0.5f - label.getFont().calculateSize(label.getWorkingLayout()) * 0.5f,
             -getHeight() * 2.1f);*/
+        label.setVisible(false);
         addActor(label);
 
         // Just shows where the exact center of the bar is.
@@ -68,6 +73,15 @@ public class BaseProgressBar extends BaseActor {
             getWidth() * 0.5f - label.getFont().calculateSize(label.getWorkingLayout()) * 0.5f,
             getHeight() * 0.55f);
 
+
+        Action action = Actions.sequence(
+            Actions.delay(0.2f),
+            Actions.scaleTo(1.0f, 1.1f, 0.2f, Interpolation.elasticOut),
+            Actions.scaleTo(1.0f, 0.9f, 0.2f, Interpolation.elasticOut),
+            Actions.scaleTo(1.0f, 1.0f, 1.25f, Interpolation.elasticOut)
+        );
+        addAction(action);
+        progress.addAction(action);
     }
 
     // Decrement the progress bar by a certain percentage (in integer values)
@@ -78,6 +92,15 @@ public class BaseProgressBar extends BaseActor {
         // Calculate the new width based on the level percentage
         float newWidth = (float) level / 100 * getWidth();
         progress.addAction(Actions.sizeTo(newWidth, getHeight(), 0.25f));
+
+        Action action = Actions.sequence(
+            Actions.delay(0.2f),
+            Actions.scaleTo(1.0f, 0.9f, 0.3f, Interpolation.bounceOut),
+            Actions.scaleTo(1.0f, 1.1f, 0.3f, Interpolation.bounceOut),
+            Actions.scaleTo(1.0f, 1.0f, 2.5f, Interpolation.bounceOut)
+        );
+        addAction(action);
+        progress.addAction(action);
 
         // Update the label with the new level
         label.setText(level + " / 100", true);
