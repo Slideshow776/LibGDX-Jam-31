@@ -75,6 +75,7 @@ public class LevelScreen extends BaseScreen {
 
     public static void looseHealth() {
         healthBar.decrementPercentage(10);
+        BaseGame.health = healthBar.level;
         if (healthBar.level >= 10) {
             // Calculate pitch based on the level, ranging from 0.8 to 1.2
             float pitch = 1.2f - ((healthBar.level - 10) / 100.0f) * (1.2f - 0.8f);  // Linearly map level to pitch between 0.8 and 1.2
@@ -104,8 +105,8 @@ public class LevelScreen extends BaseScreen {
 
         // Play the heartbeat sound with a random pitch between 0.8 and 1.2
         heartbeatSound.play(volume, MathUtils.random(0.8f, 1.2f), 0.0f);
+        BaseGame.health = healthBar.level;
     }
-
 
 
     private void initializeActors() {
@@ -133,7 +134,7 @@ public class LevelScreen extends BaseScreen {
         scoreLabel.setAlignment(Align.center);
 
         healthBar = new BaseProgressBar(0, 0, uiStage);
-        healthBar.incrementPercentage(100);
+        healthBar.incrementPercentage(BaseGame.health);
         healthBar.setProgressBarColor(Color.valueOf("de3a68"));
 
         messageLabel = new TypingLabel("{CROWD}press '{RAINBOW}R{ENDRAINBOW}' to reincarnate", AssetLoader.getLabelStyle("Play-Bold59white"));

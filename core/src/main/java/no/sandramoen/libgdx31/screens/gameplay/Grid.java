@@ -204,6 +204,8 @@ public class Grid {
 
             // calculate score
             float thisScore = (1 * scoreModifier);
+            if (clickedShape.type == Shape.Type.STAR)
+                thisScore *= 2.0;
             levelScore += thisScore;
             scoreModifier = 1.1f + (distance * 0.5f); // Modifier grows based on distance
             Array<Shape> shapesAtDistance = distanceGroups.get(distance);
@@ -212,17 +214,18 @@ public class Grid {
             for (Shape shape : shapesAtDistance) {
                 float finalDelay = delay;
                 triggeredShapes++;
+                float finalThisScore = thisScore;
                 shape.addAction(Actions.delay(delay, Actions.run(() -> {
                     AssetLoader.swordSounds.get(MathUtils.random(0, 13)).play(BaseGame.soundVolume, 0.3f + (finalDelay * 0.8f), 0.0f);
                     //AssetLoader.bubbleSound.play(BaseGame.soundVolume, 0.8f + (finalDelay), 0.0f);
                     shape.animatedRemove();
 
-                    // feature TODO: label that shows the score you get.
+                    // label that shows the score you get.
                     Styles.LabelStyle style = AssetLoader.getLabelStyle("Play-Bold20white");
                     // This is sometimes needed when a Viewport uses 1 unit to mean "1 Mario" or "1 Sonic".
-                    style.font.scaleHeightTo(0.2f * thisScore);
+                    style.font.scaleHeightTo(0.2f * finalThisScore);
                     style.fontColor = Color.LIGHT_GRAY;
-                    TypingLabel label = new TypingLabel("" + (int)thisScore, style);
+                    TypingLabel label = new TypingLabel("" + (int) finalThisScore, style);
                     label.setPosition(shape.getX() + shape.getWidth() * 0.5f,
                                       shape.getY() + shape.getHeight() * 0.5f,
                                       Align.center);
