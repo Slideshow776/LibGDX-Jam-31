@@ -82,7 +82,7 @@ public class LevelScreen extends BaseScreen {
 
 
     public static void gainMana(int amount) {
-        if (amount + manaBar.level > 100) {
+        if (amount * 10 + manaBar.level > 100) {
             System.out.println("TODO: implement mana surge damage effects");
             healthBar.decrementPercentage(((amount * 10) + manaBar.level) - 100);
             looseHealth(((amount * 10) + manaBar.level) - 100);
@@ -202,7 +202,9 @@ public class LevelScreen extends BaseScreen {
 
 
     private void restart() {
-        BaseGame.setActiveScreen(new LevelScreen("up"));
         LevelScreen.score = 0;
+        BaseGame.health = 100;
+        BaseGame.mana = 0;
+        BaseGame.setActiveScreen(new LevelScreen("up"));
     }
 }
