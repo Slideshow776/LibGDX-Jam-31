@@ -7,18 +7,22 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.assets.loaders.resolvers.InternalFileHandleResolver;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
+import com.github.tommyettinger.textra.FWSkin;
+import com.github.tommyettinger.textra.FWSkinLoader;
+import com.github.tommyettinger.textra.Font;
 import com.github.tommyettinger.textra.Styles;
 
 public class AssetLoader implements AssetErrorListener {
 
     public static TextureAtlas textureAtlas;
-    public static Skin mySkin;
+    public static FWSkin mySkin;
 
     public static String defaultShader;
     public static String shockwaveShader;
@@ -47,6 +51,7 @@ public class AssetLoader implements AssetErrorListener {
     static {
         long time = System.currentTimeMillis();
         BaseGame.assetManager = new AssetManager();
+        BaseGame.assetManager. setLoader(Skin. class, new FWSkinLoader(BaseGame.assetManager. getFileHandleResolver()));
         BaseGame.assetManager.setErrorListener(new AssetLoader());
 
         loadAssets();
@@ -62,7 +67,10 @@ public class AssetLoader implements AssetErrorListener {
     }
 
     public static Styles.LabelStyle getLabelStyle(String fontName) {
-        return new Styles.LabelStyle(AssetLoader.mySkin.get(fontName, BitmapFont.class), null);
+        return new Styles.LabelStyle(
+            new Font(
+                AssetLoader.mySkin.get(fontName, Font.class)
+            ), Color.WHITE);
     }
 
     private static void loadAssets() {
@@ -142,7 +150,7 @@ public class AssetLoader implements AssetErrorListener {
         backgroundShader = BaseGame.assetManager.get("shaders/voronoi.fs", Text.class).getString();
 
         // skins
-        mySkin = new Skin(Gdx.files.internal("skins/mySkin/mySkin.json"));
+        mySkin = new FWSkin(Gdx.files.internal("skins/mySkin/mySkin.json"));
 
         // fonts
         loadFonts();
@@ -154,12 +162,12 @@ public class AssetLoader implements AssetErrorListener {
     }
 
     private static void loadFonts() {
-        float scale = Gdx.graphics.getWidth() * .001f; // magic number ensures scale ~= 1, based on screen width
+        float scale = Gdx.graphics.getWidth() * .05f; // magic number ensures scale ~= 1, based on screen width
         scale *= 1.01f; // make x percent bigger, bigger = more fuzzy
 
-        mySkin.getFont("Play-Bold20white").getData().setScale(scale);
-        mySkin.getFont("Play-Bold40white").getData().setScale(scale);
-        mySkin.getFont("Play-Bold59white").getData().setScale(scale);
+        mySkin.get("Play-Bold20white", Font.class).scale(scale);
+        mySkin.get("Play-Bold40white", Font.class).scale(scale);
+        mySkin.get("Play-Bold59white", Font.class).scale(scale);
     }
 
     private static void loadTiledMap() {
