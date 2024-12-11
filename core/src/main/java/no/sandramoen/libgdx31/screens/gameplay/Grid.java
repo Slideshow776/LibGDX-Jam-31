@@ -1,5 +1,9 @@
 package no.sandramoen.libgdx31.screens.gameplay;
 
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
+import com.badlogic.gdx.utils.Align;
+import com.github.tommyettinger.textra.Styles;
 import no.sandramoen.libgdx31.actors.Shape;
 import no.sandramoen.libgdx31.screens.shell.LevelSelectScreen;
 import no.sandramoen.libgdx31.utils.AssetLoader;
@@ -184,10 +188,17 @@ public class Grid {
                 })));
 
                 // feature TODO: label that shows the score you get.
-                /*TypingLabel label = new TypingLabel("0", AssetLoader.getLabelStyle("Play-Bold20white"));
-                label.scaleBy(0.05f);
-                label.setPosition(shape.getX(), shape.getY());
-                mainStage.addActor(label);*/
+                Styles.LabelStyle style = AssetLoader.getLabelStyle("Play-Bold20white");
+                // This is sometimes needed when a Viewport uses 1 unit to mean "1 Mario" or "1 Sonic".
+                style.font.scaleHeightTo(1f);
+                style.fontColor = Color.LIGHT_GRAY;
+                TypingLabel label = new TypingLabel("0", style);
+                label.setPosition(shape.getX() + shape.getWidth() * 0.5f,
+                                  shape.getY() + shape.getHeight() * 0.5f,
+                                  Align.center);
+                label.setTouchable(Touchable.disabled);
+                mainStage.addActor(label);
+                label.addAction(Actions.sequence(Actions.parallel(Actions.moveBy(MathUtils.randomTriangular(0.8f), 1.5f + MathUtils.randomTriangular(0.4f), 2f), Actions.fadeOut(2f)), Actions.removeActor()));
 
                 // Immediately set the grid position to null as the shape is marked for removal
                 Vector2 shapePosition = shape.getGridPosition();

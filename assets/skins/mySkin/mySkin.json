@@ -3,7 +3,7 @@ com.badlogic.gdx.graphics.g2d.BitmapFont: {
 	Play-Bold20white: {
 		file: Play-Bold20white.fnt
 		scaledSize: 1
-		markupEnabled: false
+		markupEnabled: true
 		flip: false
 	}
 	Play-Bold40white: {
