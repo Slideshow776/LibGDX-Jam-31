@@ -39,7 +39,7 @@ public class Background extends BaseActor {
             Gdx.app.error("Background", "Shader compile error: " + shaderProgram.getLog());
         }
 
-        float strength = 0.05f;
+        float strength = 0.075f;
         if (direction == "up")
             this.colour = new Vector3(strength, 0.0f, 0.0f);
         else if (direction == "right")
