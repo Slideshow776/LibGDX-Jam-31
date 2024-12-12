@@ -47,7 +47,7 @@ public class BaseProgressBar extends BaseActor {
        /* label.setPosition(
             getWidth() * 0.5f - label.getFont().calculateSize(label.getWorkingLayout()) * 0.5f,
             -getHeight() * 2.1f);*/
-        label.setVisible(true);
+        label.setVisible(false);
         addActor(label);
 
         // Just shows where the exact center of the bar is.
