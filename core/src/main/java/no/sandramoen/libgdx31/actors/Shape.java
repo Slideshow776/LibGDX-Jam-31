@@ -12,11 +12,11 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
-import com.badlogic.gdx.utils.compression.lzma.Base;
 
-import no.sandramoen.libgdx31.actors.particles.RedKeyEffect;
-import no.sandramoen.libgdx31.actors.particles.ShapeClickEffect;
+import no.sandramoen.libgdx31.actors.particles.CircleClickEffect;
+import no.sandramoen.libgdx31.actors.particles.SquareClickEffect;
+import no.sandramoen.libgdx31.actors.particles.StarClickEffect;
+import no.sandramoen.libgdx31.actors.particles.TriangleClickEffect;
 import no.sandramoen.libgdx31.screens.gameplay.Grid;
 import no.sandramoen.libgdx31.screens.gameplay.LevelScreen;
 import no.sandramoen.libgdx31.utils.AssetLoader;
@@ -131,7 +131,34 @@ public class Shape extends BaseActor {
             Actions.sequence(
                 Actions.parallel(
                     Actions.scaleTo(0.0f, 0.0f, ANIMATION_REMOVAL_DELAY),
-                    Actions.rotateBy(360f, ANIMATION_REMOVAL_DELAY)
+                    Actions.rotateBy(360f, ANIMATION_REMOVAL_DELAY),
+                    Actions.run(() -> {
+                        if (type == Type.SQUARE) {
+                            SquareClickEffect clickEffect = new SquareClickEffect();
+                            clickEffect.setPosition(getX() + getWidth() / 2, getY() + getHeight() / 2);
+                            clickEffect.setScale(0.0025f);
+                            getStage().addActor(clickEffect);
+                            clickEffect.start();
+                        } else if (type == Type.STAR) {
+                            StarClickEffect clickEffect = new StarClickEffect();
+                            clickEffect.setPosition(getX() + getWidth() / 2, getY() + getHeight() / 2);
+                            clickEffect.setScale(0.0025f);
+                            getStage().addActor(clickEffect);
+                            clickEffect.start();
+                        } else if (type == Type.CIRCLE) {
+                            CircleClickEffect clickEffect = new CircleClickEffect();
+                            clickEffect.setPosition(getX() + getWidth() / 2, getY() + getHeight() / 2);
+                            clickEffect.setScale(0.0025f);
+                            getStage().addActor(clickEffect);
+                            clickEffect.start();
+                        } else if (type == Type.TRIANGLE) {
+                            TriangleClickEffect clickEffect = new TriangleClickEffect();
+                            clickEffect.setPosition(getX() + getWidth() / 2, getY() + getHeight() / 2);
+                            clickEffect.setScale(0.0025f);
+                            getStage().addActor(clickEffect);
+                            clickEffect.start();
+                        }
+                    })
                 ),
                 Actions.removeActor()
             )
@@ -181,16 +208,6 @@ public class Shape extends BaseActor {
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                ShapeClickEffect clickEffect = new ShapeClickEffect();
-                clickEffect.setPosition(getX() + getWidth() / 2, getY() + getHeight() / 2);
-                clickEffect.setScale(0.0025f);
-
-                //clickEffect.setColor(Color.valueOf("#" + type.getColor().toString()));
-                System.out.println("#" + type.getColor().toString());
-                clickEffect.setColor(Color.BLACK);
-
-                getStage().addActor(clickEffect);
-                clickEffect.start();
                 if (!clickable)
                     return false;
 
