@@ -19,7 +19,7 @@ public class Background extends BaseActor {
     private float time = 0.0f;
     private boolean disabled = false;
     private Vector3 colour;
-    public float timeMultiplier = 1f;
+    public float timeMultiplier = 2f;
     public float timeIncrement = 1.1f;
     public boolean increaseSpeed = false;
     public boolean decreaseSpeed = false;

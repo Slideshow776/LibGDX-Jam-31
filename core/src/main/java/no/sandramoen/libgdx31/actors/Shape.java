@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.EventListener;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -14,6 +15,8 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.ButtonGroup;
 import com.badlogic.gdx.utils.compression.lzma.Base;
 
+import no.sandramoen.libgdx31.actors.particles.RedKeyEffect;
+import no.sandramoen.libgdx31.actors.particles.ShapeClickEffect;
 import no.sandramoen.libgdx31.screens.gameplay.Grid;
 import no.sandramoen.libgdx31.screens.gameplay.LevelScreen;
 import no.sandramoen.libgdx31.utils.AssetLoader;
@@ -23,6 +26,7 @@ import space.earlygrey.shapedrawer.ShapeDrawer;
 
 
 public class Shape extends BaseActor {
+
 
     public static final float ANIMATION_REMOVAL_DELAY = 0.2f;
 
@@ -149,7 +153,6 @@ public class Shape extends BaseActor {
     }
 
 
-
     private Vector2 getCenter() {
         return new Vector2(
             getX() + getWidth() / 2f,  // X center
@@ -161,7 +164,22 @@ public class Shape extends BaseActor {
     private EventListener onShapeClicked() {
         return new InputListener() {
             @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                super.enter(event, x, y, pointer, fromActor);
+            }
+
+            @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                ShapeClickEffect clickEffect = new ShapeClickEffect();
+                clickEffect.setPosition(getX() + getWidth() / 2, getY() + getHeight() / 2);
+                clickEffect.setScale(0.0025f);
+
+                //clickEffect.setColor(Color.valueOf("#" + type.getColor().toString()));
+                System.out.println("#" + type.getColor().toString());
+                clickEffect.setColor(Color.BLACK);
+
+                getStage().addActor(clickEffect);
+                clickEffect.start();
                 if (!clickable)
                     return false;
 
@@ -308,5 +326,4 @@ public class Shape extends BaseActor {
 
         return vertices;
     }
-
 }
