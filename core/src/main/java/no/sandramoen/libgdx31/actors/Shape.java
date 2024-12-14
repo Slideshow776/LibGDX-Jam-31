@@ -162,10 +162,21 @@ public class Shape extends BaseActor {
 
 
     private EventListener onShapeClicked() {
+        Interpolation enterExitInterpolation = Interpolation.fade;
+        float enterExitDuration = 0.5f;
+        float enterScaleAmount = 1.1f;
+
         return new InputListener() {
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
                 super.enter(event, x, y, pointer, fromActor);
+                addAction(Actions.scaleTo(enterScaleAmount, enterScaleAmount, enterExitDuration, enterExitInterpolation));
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                super.exit(event, x, y, pointer, toActor);
+                addAction(Actions.scaleTo(1.0f, 1.0f, enterExitDuration, enterExitInterpolation));
             }
 
             @Override
