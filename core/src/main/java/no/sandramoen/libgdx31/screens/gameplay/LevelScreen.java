@@ -52,11 +52,13 @@ public class LevelScreen extends BaseScreen {
 
 
     @Override
-    public void initialize() {}
+    public void initialize() {
+    }
 
 
     @Override
-    public void update(float delta) {}
+    public void update(float delta) {
+    }
 
 
     @Override
@@ -87,6 +89,9 @@ public class LevelScreen extends BaseScreen {
             healthBar.decrementPercentage(((amount * 10) + manaBar.level) - 100);
             looseHealth(((amount * 10) + manaBar.level) - 100);
             AssetLoader.manaSurgeSound.play(BaseGame.soundVolume);
+
+            if (healthBar.level <= 0)
+                messageLabel.setText("{COLOR=#389bc2}{WIND}The wizards magic ran wild!{ENDWIND}{CLEARCOLOR}\n{JOLT}They were forced to retreat!{ENDJOLT}\n{CROWD}Press '{RAINBOW}R{ENDRAINBOW}' to return.");
         }
         manaBar.incrementPercentage(amount * 10);
         BaseGame.mana = manaBar.level;
@@ -168,7 +173,7 @@ public class LevelScreen extends BaseScreen {
         manaBar.setColor(Color.valueOf("2c1861"));
         manaBar.setProgressBarColor(Color.valueOf("69f7ff"));
 
-        messageLabel = new TypingLabel("{CROWD}press '{RAINBOW}R{ENDRAINBOW}' to reincarnate", AssetLoader.getLabelStyle("Play-Bold59white"));
+        messageLabel = new TypingLabel("{JOLT}They barely made it back!{ENDJOLT}\n{CROWD}Press '{RAINBOW}R{ENDRAINBOW}' to return.", AssetLoader.getLabelStyle("Play-Bold59white"));
         messageLabel.getColor().a = 0.0f;
         messageLabel.setAlignment(Align.center);
 
