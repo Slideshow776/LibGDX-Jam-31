@@ -1,5 +1,7 @@
 package no.sandramoen.libgdx31.actors;
 
+import static no.sandramoen.libgdx31.utils.AssetLoader.heartbeatSound;
+
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -155,7 +157,12 @@ public class Shape extends BaseActor {
                             TriangleClickEffect clickEffect = new TriangleClickEffect();
                             clickEffect.setPosition(getX() + getWidth() / 2, getY() + getHeight() / 2);
                             clickEffect.setScale(0.0025f);
-                            getStage().addActor(clickEffect);
+                            if (getStage() != null)
+                                getStage().addActor(clickEffect);
+                            else {
+                                System.out.println("Shape.java => Error: getStage() returned null!");
+                                addActor(clickEffect);
+                            }
                             clickEffect.start();
                         }
                     })

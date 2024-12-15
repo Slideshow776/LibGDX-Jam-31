@@ -25,7 +25,6 @@ import no.sandramoen.libgdx31.utils.GameUtils;
 public class LevelScreen extends BaseScreen {
 
 
-    public static int score;
     public static TypingLabel scoreLabel;
     public static TypingLabel messageLabel;
 
@@ -128,7 +127,7 @@ public class LevelScreen extends BaseScreen {
         // Calculate volume based on current health level, making it louder as health decreases
         float volume = BaseGame.soundVolume * 1.5f + (1.0f - (healthBar.level / 100.0f)) * 0.5f;
         // Play the heartbeat sound with a random pitch between 0.8 and 1.2
-        heartbeatSound.play(volume, MathUtils.random(0.8f, 1.2f), 0.0f);
+        heartbeatSound.play(BaseGame.soundVolume, MathUtils.random(0.8f, 1.2f), 0.0f);
         BaseGame.health = healthBar.level;
     }
 
@@ -154,7 +153,7 @@ public class LevelScreen extends BaseScreen {
 
 
     private void initializeGUI() {
-        scoreLabel = new TypingLabel("0", AssetLoader.getLabelStyle("Play-Bold59white"));
+        scoreLabel = new TypingLabel("" + BaseGame.score, AssetLoader.getLabelStyle("Play-Bold59white"));
         scoreLabel.setAlignment(Align.center);
 
         healthBar = new BaseProgressBar(0, 0, uiStage);
@@ -206,7 +205,7 @@ public class LevelScreen extends BaseScreen {
 
 
     private void restart() {
-        LevelScreen.score = 0;
+        BaseGame.score = 0;
         BaseGame.health = 100;
         BaseGame.mana = 0;
         BaseGame.setActiveScreen(new LevelScreen("up"));

@@ -34,6 +34,7 @@ public abstract class BaseGame extends Game implements AssetErrorListener {
 
     public static int health = 100;
     public static int mana = 0;
+    public static int score = 0;
 
     public BaseGame() {
         game = this;

@@ -259,8 +259,8 @@ public class Grid {
         ));
 
         // set score
-        LevelScreen.score += levelScore;
-        LevelScreen.scoreLabel.setText("" + LevelScreen.score);
+        BaseGame.score += levelScore;
+        LevelScreen.scoreLabel.setText("" + BaseGame.score);
         LevelScreen.scoreLabel.restart();
         LevelScreen.scoreLabel.invalidateHierarchy();
 

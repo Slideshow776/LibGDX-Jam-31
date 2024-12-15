@@ -13,8 +13,8 @@ public class MyGdxGame extends BaseGame {
 		//setActiveScreen(new SplashScreen());
 		//setActiveScreen(new MenuScreen());
 
-        setActiveScreen(new LevelSelectScreen());
-		//setActiveScreen(new LevelScreen("up"));
+        //setActiveScreen(new LevelSelectScreen());
+		setActiveScreen(new LevelScreen("up"));
 	}
 }
 
