@@ -96,7 +96,7 @@ public class AssetLoader implements AssetErrorListener {
             BaseGame.assetManager.load("audio/sound/sword sounds/" + i + ".ogg", Sound.class);
         }
         BaseGame.assetManager.load("audio/sound/149834__latzii__heartbeat_long.wav", Sound.class);
-        BaseGame.assetManager.load("audio/sound/open door sound.ogg", Sound.class);
+        BaseGame.assetManager.load("audio/sound/open door sound2.ogg", Sound.class);
         BaseGame.assetManager.load("audio/sound/manaSurge.wav", Sound.class);
         BaseGame.assetManager.load("audio/sound/manaUse.wav", Sound.class);
         BaseGame.assetManager.load("audio/sound/manaEmpty.wav", Sound.class);
@@ -146,7 +146,7 @@ public class AssetLoader implements AssetErrorListener {
             swordSounds.add(sound);
         }
         longHeartbeatSound = BaseGame.assetManager.get("audio/sound/149834__latzii__heartbeat_long.wav", Sound.class);
-        openDoorSound = BaseGame.assetManager.get("audio/sound/open door sound.ogg", Sound.class);
+        openDoorSound = BaseGame.assetManager.get("audio/sound/open door sound2.ogg", Sound.class);
         manaSurgeSound = BaseGame.assetManager.get("audio/sound/manaSurge.wav", Sound.class);
         manaUseSound = BaseGame.assetManager.get("audio/sound/manaUse.wav", Sound.class);
         manaEmptySound = BaseGame.assetManager.get("audio/sound/manaEmpty.wav", Sound.class);

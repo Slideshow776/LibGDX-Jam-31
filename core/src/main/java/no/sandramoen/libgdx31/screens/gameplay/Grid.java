@@ -278,6 +278,7 @@ public class Grid {
 
         if (!areAnyShapesLeft()) {
             clearBoard();
+            AssetLoader.openDoorSound.play(BaseGame.soundVolume * 0.75f);
             mainStage.addAction(Actions.sequence(
                 Actions.delay(2.0f),
                 Actions.run(() -> BaseGame.setActiveScreen(new LevelSelectScreen()))
@@ -448,6 +449,7 @@ public class Grid {
         }
     }
 
+
     public void printBoardType() {
         // Iterate over each row of the grid from top to bottom
         for (int y = height - 1; y >= 0; y--) {  // Start from the top (y = height - 1)
@@ -484,7 +486,4 @@ public class Grid {
             System.out.println(row.toString());
         }
     }
-
-
 }
-

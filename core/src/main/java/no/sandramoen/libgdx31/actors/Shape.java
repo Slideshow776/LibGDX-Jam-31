@@ -59,7 +59,7 @@ public class Shape extends BaseActor {
         this.shapeDrawer = shapeDrawer;
         this.type = type;
         this.grid = grid;
-        loadImage("shapes/circle/eyes");
+        loadImage("whitePixel");
         getColor().a = 0.0f;  // Ensure fully visible
         setSize(cellSize, cellSize); // Set the size of the shape
 
