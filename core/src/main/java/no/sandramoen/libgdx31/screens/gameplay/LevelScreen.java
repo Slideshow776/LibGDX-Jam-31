@@ -88,7 +88,6 @@ public class LevelScreen extends BaseScreen {
 
     public static void gainMana(int amount) {
         if (amount * 10 + manaBar.level > 100) {
-            System.out.println("TODO: implement mana surge damage effects");
             healthBar.decrementPercentage(((amount * 10) + manaBar.level) - 100);
             looseHealth(((amount * 10) + manaBar.level) - 100);
             AssetLoader.manaSurgeSound.play(BaseGame.soundVolume);

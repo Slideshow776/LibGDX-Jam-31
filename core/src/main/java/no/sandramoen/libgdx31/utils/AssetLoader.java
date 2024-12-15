@@ -38,8 +38,12 @@ public class AssetLoader implements AssetErrorListener {
     public static Sound longHeartbeatSound;
     public static Sound openDoorSound;
     public static Sound manaSurgeSound;
+    public static Sound manaGainSound;
     public static Sound manaUseSound;
     public static Sound manaEmptySound;
+    public static Sound metalClinkSound;
+    public static Sound squishSound;
+    public static Sound swooshSound;
 
     public static Array<Music> music;
     public static Music levelMusic;
@@ -100,6 +104,10 @@ public class AssetLoader implements AssetErrorListener {
         BaseGame.assetManager.load("audio/sound/manaSurge.wav", Sound.class);
         BaseGame.assetManager.load("audio/sound/manaUse.wav", Sound.class);
         BaseGame.assetManager.load("audio/sound/manaEmpty.wav", Sound.class);
+        BaseGame.assetManager.load("audio/sound/manaGain.wav", Sound.class);
+        BaseGame.assetManager.load("audio/sound/682152__henkonen__metallic-clink-1.ogg", Sound.class);
+        BaseGame.assetManager.load("audio/sound/85852__mwlandi__pumpmkin-guts-2.ogg", Sound.class);
+        BaseGame.assetManager.load("audio/sound/614157__videofueralle__swishes_15_gentle_slower2.ogg", Sound.class);
 
         // i18n
 
@@ -150,6 +158,10 @@ public class AssetLoader implements AssetErrorListener {
         manaSurgeSound = BaseGame.assetManager.get("audio/sound/manaSurge.wav", Sound.class);
         manaUseSound = BaseGame.assetManager.get("audio/sound/manaUse.wav", Sound.class);
         manaEmptySound = BaseGame.assetManager.get("audio/sound/manaEmpty.wav", Sound.class);
+        manaGainSound = BaseGame.assetManager.get("audio/sound/manaGain.wav", Sound.class);
+        metalClinkSound = BaseGame.assetManager.get("audio/sound/682152__henkonen__metallic-clink-1.ogg", Sound.class);
+        squishSound = BaseGame.assetManager.get("audio/sound/85852__mwlandi__pumpmkin-guts-2.ogg", Sound.class);
+        swooshSound = BaseGame.assetManager.get("audio/sound/614157__videofueralle__swishes_15_gentle_slower2.ogg", Sound.class);
 
         // i18n
 

@@ -219,6 +219,18 @@ public class Shape extends BaseActor {
                     return false;
 
                 if (button == Input.Buttons.LEFT) {
+                    if (type == Type.TRIANGLE) {
+                        AssetLoader.manaGainSound.play(BaseGame.soundVolume, MathUtils.random(0.8f, 1.2f), 0.0f);
+                    } else if (type == Type.STAR) {
+                        AssetLoader.metalClinkSound.play(BaseGame.soundVolume, MathUtils.random(0.8f, 1.2f), 0.0f);
+                    } else if (type == Type.SQUARE) {
+                        AssetLoader.squishSound.play(BaseGame.soundVolume * 0.5f, MathUtils.random(0.8f, 1.2f), 0.0f);
+                    } else if (type == Type.CIRCLE) {
+                        AssetLoader.swooshSound.play(BaseGame.soundVolume, MathUtils.random(0.8f, 1.2f), 0.0f);
+                    }
+                }
+
+                if (button == Input.Buttons.LEFT) {
                     grid.removeConnectedShapes(gridX, gridY, type);
                 } else if (button == Input.Buttons.RIGHT && BaseGame.mana >= 10) {
                     LevelScreen.looseMana(10);
