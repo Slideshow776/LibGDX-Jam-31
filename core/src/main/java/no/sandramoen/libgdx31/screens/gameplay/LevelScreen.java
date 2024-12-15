@@ -9,12 +9,16 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.github.tommyettinger.textra.TypingLabel;
 
 import no.sandramoen.libgdx31.actors.Background;
+import no.sandramoen.libgdx31.actors.particles.HealthGainEffect;
+import no.sandramoen.libgdx31.actors.particles.TriangleClickEffect;
 import no.sandramoen.libgdx31.gui.BaseProgressBar;
 import no.sandramoen.libgdx31.utils.AssetLoader;
 import no.sandramoen.libgdx31.utils.BaseGame;
@@ -162,6 +166,7 @@ public class LevelScreen extends BaseScreen {
         healthBar.animationDuration = 0.25f;
         healthBar.setColor(Color.valueOf("780c72"));
         healthBar.setProgressBarColor(Color.valueOf("de3a68"));
+        healthBar.type = "health";
 
         manaBar = new BaseProgressBar(0, 2, uiStage);
         manaBar.setProgress(100);
@@ -170,6 +175,7 @@ public class LevelScreen extends BaseScreen {
         manaBar.animationDuration = 0.25f;
         manaBar.setColor(Color.valueOf("2c1861"));
         manaBar.setProgressBarColor(Color.valueOf("69f7ff"));
+        manaBar.type = "mana";
 
         messageLabel = new TypingLabel("{JOLT}They barely made it back!{ENDJOLT}\n{CROWD}Press '{RAINBOW}R{ENDRAINBOW}' to return.", AssetLoader.getLabelStyle("Play-Bold59white"));
         messageLabel.getColor().a = 0.0f;

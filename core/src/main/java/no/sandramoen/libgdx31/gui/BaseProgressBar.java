@@ -3,6 +3,7 @@ package no.sandramoen.libgdx31.gui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Interpolation;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -10,13 +11,20 @@ import com.badlogic.gdx.utils.Align;
 import com.github.tommyettinger.textra.Styles;
 import com.github.tommyettinger.textra.TypingLabel;
 
+import no.sandramoen.libgdx31.actors.particles.HealthGainEffect;
+import no.sandramoen.libgdx31.actors.particles.HealthLooseEffect;
+import no.sandramoen.libgdx31.actors.particles.ManaGainEffect;
+import no.sandramoen.libgdx31.actors.particles.ManaLooseEffect;
+import no.sandramoen.libgdx31.actors.particles.TriangleClickEffect;
 import no.sandramoen.libgdx31.utils.AssetLoader;
 import no.sandramoen.libgdx31.utils.BaseActor;
+import no.sandramoen.libgdx31.utils.BaseGame;
 
 public class BaseProgressBar extends BaseActor {
 
     public int level = 0; // Store level as an integer from 0 to 100
     public float animationDuration = 0.25f;
+    public String type = "";
 
     private BaseActor progress;
     private TypingLabel label;
@@ -94,6 +102,20 @@ public class BaseProgressBar extends BaseActor {
         );
         addAction(action);
         progress.addAction(action);
+
+        if (type == "health") {
+            HealthGainEffect clickEffect = new HealthGainEffect();
+            clickEffect.setPosition(getWidth() / 2, getHeight());
+            clickEffect.setScale(0.25f);
+            addActor(clickEffect);
+            clickEffect.start();
+        } else if (type == "mana") {
+            ManaGainEffect clickEffect = new ManaGainEffect();
+            clickEffect.setPosition(getWidth() / 2, getHeight());
+            clickEffect.setScale(0.25f);
+            addActor(clickEffect);
+            clickEffect.start();
+        }
     }
 
     // Decrement the progress bar by a certain percentage (in integer values)
@@ -119,6 +141,20 @@ public class BaseProgressBar extends BaseActor {
         label.setPosition(
             getWidth() * 0.5f - label.getFont().calculateSize(label.getWorkingLayout()) * 0.5f,
             getHeight() * 0.55f);
+
+        if (type == "health") {
+            HealthLooseEffect clickEffect = new HealthLooseEffect();
+            clickEffect.setPosition(getWidth() / 2, getHeight() * 0.24f);
+            clickEffect.setScale(0.25f);
+            addActor(clickEffect);
+            clickEffect.start();
+        } else if (type == "mana") {
+            ManaLooseEffect clickEffect = new ManaLooseEffect();
+            clickEffect.setPosition(getWidth() / 2, getHeight() / 2);
+            clickEffect.setScale(0.25f);
+            addActor(clickEffect);
+            clickEffect.start();
+        }
     }
 
     // Set the color of the progress bar
