@@ -42,10 +42,10 @@ active: false
 - Spawn Shape - 
 shape: square
 - Spawn Width - 
-lowMin: 2300.0
-lowMax: 2300.0
-highMin: 2300.0
-highMax: 2300.0
+lowMin: 2100.0
+lowMax: 2100.0
+highMin: 2100.0
+highMax: 2100.0
 relative: false
 scalingCount: 1
 scaling0: 1.0

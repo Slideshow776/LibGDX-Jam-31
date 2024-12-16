@@ -75,6 +75,9 @@ public class Shape extends BaseActor {
 
     @Override
     public void draw(Batch batch, float parentAlpha) {
+        if (shapeDrawer == null || type == null)
+            return;
+
         // Get center for drawing
         Vector2 center = getCenter();
 
@@ -167,7 +170,11 @@ public class Shape extends BaseActor {
                         }
                     })
                 ),
-                Actions.removeActor()
+                Actions.run(() -> {
+                    removeListener(onShapeClicked());
+                    clear();
+                    remove();
+                })
             )
         );
     }
