@@ -265,7 +265,7 @@ public class Grid {
         LevelScreen.scoreLabel.invalidateHierarchy();
 
         if (triggeredShapes == 1)
-            LevelScreen.looseHealth(10);
+            LevelScreen.looseHealth(20);
 
         if (numSquaresTriggered >= 12)
             LevelScreen.gainHealth(30);

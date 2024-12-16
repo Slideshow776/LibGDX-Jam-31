@@ -97,7 +97,7 @@ public class LevelScreen extends BaseScreen {
     public static void gainMana(int amount) {
         if (amount * 10 + manaBar.level > 100) {
             healthBar.decrementPercentage(((amount * 10) + manaBar.level) - 100);
-            looseHealth(((amount * 10) + manaBar.level) - 100);
+            looseHealth(((amount * 20) + manaBar.level) - 100);
             AssetLoader.manaSurgeSound.play(BaseGame.soundVolume);
 
             if (healthBar.level <= 0) {
