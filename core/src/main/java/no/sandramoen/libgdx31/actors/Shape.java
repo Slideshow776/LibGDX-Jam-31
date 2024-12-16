@@ -142,27 +142,45 @@ public class Shape extends BaseActor {
                             SquareClickEffect clickEffect = new SquareClickEffect();
                             clickEffect.setPosition(getX() + getWidth() / 2, getY() + getHeight() / 2);
                             clickEffect.setScale(0.0025f);
-                            getStage().addActor(clickEffect);
+                            if (getStage() != null) {
+                                getStage().addActor(clickEffect);
+                            }
+                            else {
+                                System.out.println("Shape.java => Error: getStage() returned null!");
+                                addActor(clickEffect);
+                            }
                             clickEffect.start();
                         } else if (type == Type.STAR) {
                             StarClickEffect clickEffect = new StarClickEffect();
                             clickEffect.setPosition(getX() + getWidth() / 2, getY() + getHeight() / 2);
                             clickEffect.setScale(0.0025f);
-                            getStage().addActor(clickEffect);
+                            if (getStage() != null) {
+                                getStage().addActor(clickEffect);
+                            }
+                            else {
+                                System.out.println("Shape.java => Error: getStage() returned null!");
+                                addActor(clickEffect);
+                            }
                             clickEffect.start();
                         } else if (type == Type.CIRCLE) {
                             CircleClickEffect clickEffect = new CircleClickEffect();
                             clickEffect.setPosition(getX() + getWidth() / 2, getY() + getHeight() / 2);
                             clickEffect.setScale(0.0025f);
-                            getStage().addActor(clickEffect);
+                            if (getStage() != null) {
+                                getStage().addActor(clickEffect);
+                            }
+                            else {
+                                System.out.println("Shape.java => Error: getStage() returned null!");
+                                addActor(clickEffect);
+                            }
                             clickEffect.start();
                         } else if (type == Type.TRIANGLE) {
                             TriangleClickEffect clickEffect = new TriangleClickEffect();
                             clickEffect.setPosition(getX() + getWidth() / 2, getY() + getHeight() / 2);
                             clickEffect.setScale(0.0025f);
-                            if (getStage() != null)
+                            if (getStage() != null) {
                                 getStage().addActor(clickEffect);
-                            else {
+                            } else {
                                 System.out.println("Shape.java => Error: getStage() returned null!");
                                 addActor(clickEffect);
                             }
@@ -220,6 +238,7 @@ public class Shape extends BaseActor {
                 addAction(Actions.scaleTo(1.0f, 1.0f, enterExitDuration, enterExitInterpolation));
             }
 
+
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 if (!clickable)
@@ -245,6 +264,7 @@ public class Shape extends BaseActor {
                 } else if (button == Input.Buttons.RIGHT && BaseGame.mana == 0) {
                     AssetLoader.manaEmptySound.play(BaseGame.soundVolume, MathUtils.random(0.9f, 1.1f), 0.0f);
                 }
+
                 return true;
             }
         };
