@@ -1,7 +1,5 @@
 package no.sandramoen.libgdx31.actors;
 
-import static no.sandramoen.libgdx31.utils.AssetLoader.heartbeatSound;
-
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
@@ -55,6 +53,10 @@ public class Shape extends BaseActor {
     private Grid grid;
     private boolean clickable = true;
 
+    private float touchCounter = 0f;
+    private float touch_hold_threshold = 0.5f;
+    private boolean is_touching = false;
+
 
     public Shape(float x, float y, Stage stage, ShapeDrawer shapeDrawer, Type type, float cellSize, Grid grid) {
         super(x, y, stage);
@@ -70,6 +72,20 @@ public class Shape extends BaseActor {
 
         addListener(onShapeClicked());
         //setDebug(true);
+    }
+
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+
+        if (is_touching) {
+            touchCounter += delta;
+            if (touchCounter >= touch_hold_threshold) {
+                tryToUseMana();
+                is_touching = false;
+            }
+        }
     }
 
 
@@ -240,31 +256,24 @@ public class Shape extends BaseActor {
 
 
             @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (!clickable)
-                    return false;
+                    return;
 
-                if (button == Input.Buttons.LEFT) {
-                    if (type == Type.TRIANGLE) {
-                        AssetLoader.manaGainSound.play(BaseGame.soundVolume, MathUtils.random(0.8f, 1.2f), 0.0f);
-                    } else if (type == Type.STAR) {
-                        AssetLoader.metalClinkSound.play(BaseGame.soundVolume, MathUtils.random(0.8f, 1.2f), 0.0f);
-                    } else if (type == Type.SQUARE) {
-                        AssetLoader.squishSound.play(BaseGame.soundVolume * 0.5f, MathUtils.random(0.8f, 1.2f), 0.0f);
-                    } else if (type == Type.CIRCLE) {
-                        AssetLoader.swooshSound.play(BaseGame.soundVolume, MathUtils.random(0.8f, 1.2f), 0.0f);
-                    }
-                }
-
-                if (button == Input.Buttons.LEFT) {
+                if (button == Input.Buttons.LEFT && touchCounter < touch_hold_threshold) {
                     grid.removeConnectedShapes(gridX, gridY, type);
-                } else if (button == Input.Buttons.RIGHT && BaseGame.mana >= 10) {
-                    LevelScreen.looseMana(10);
-                    changeType();
-                } else if (button == Input.Buttons.RIGHT && BaseGame.mana == 0) {
-                    AssetLoader.manaEmptySound.play(BaseGame.soundVolume, MathUtils.random(0.9f, 1.1f), 0.0f);
+                    playShapeSound();
+                } else if (button == Input.Buttons.RIGHT) {
+                    tryToUseMana();
                 }
 
+                is_touching = false;
+            }
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                touchCounter = 0f;
+                is_touching = true;
                 return true;
             }
         };
@@ -399,5 +408,28 @@ public class Shape extends BaseActor {
         }
 
         return vertices;
+    }
+
+
+    private void tryToUseMana() {
+        if (BaseGame.mana >= 10) {
+            LevelScreen.looseMana(10);
+            changeType();
+        } else {
+            AssetLoader.manaEmptySound.play(BaseGame.soundVolume, MathUtils.random(0.9f, 1.1f), 0.0f);
+        }
+    }
+
+
+    private void playShapeSound() {
+        if (type == Type.TRIANGLE) {
+            AssetLoader.manaGainSound.play(BaseGame.soundVolume, MathUtils.random(0.8f, 1.2f), 0.0f);
+        } else if (type == Type.STAR) {
+            AssetLoader.metalClinkSound.play(BaseGame.soundVolume, MathUtils.random(0.8f, 1.2f), 0.0f);
+        } else if (type == Type.SQUARE) {
+            AssetLoader.squishSound.play(BaseGame.soundVolume * 0.5f, MathUtils.random(0.8f, 1.2f), 0.0f);
+        } else if (type == Type.CIRCLE) {
+            AssetLoader.swooshSound.play(BaseGame.soundVolume, MathUtils.random(0.8f, 1.2f), 0.0f);
+        }
     }
 }
