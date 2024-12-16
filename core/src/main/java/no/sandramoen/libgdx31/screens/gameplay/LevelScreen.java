@@ -30,12 +30,13 @@ public class LevelScreen extends BaseScreen {
 
 
     public static TypingLabel scoreLabel;
-    public static TypingLabel messageLabel;
+    private static TypingLabel messageLabel;
 
     private static BaseProgressBar healthBar;
     private static BaseProgressBar manaBar;
     private static Grid grid;
     private String direction;
+    private static boolean is_game_over = false;
 
 
     public LevelScreen(String direction) {
@@ -65,6 +66,13 @@ public class LevelScreen extends BaseScreen {
 
 
     @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if (is_game_over)
+            restart();
+        return super.touchDown(screenX, screenY, pointer, button);
+    }
+
+    @Override
     public boolean keyDown(int keycode) {
         if (keycode == Keys.ESCAPE || keycode == Keys.Q)
             Gdx.app.exit();
@@ -92,8 +100,9 @@ public class LevelScreen extends BaseScreen {
             looseHealth(((amount * 10) + manaBar.level) - 100);
             AssetLoader.manaSurgeSound.play(BaseGame.soundVolume);
 
-            if (healthBar.level <= 0)
-                messageLabel.setText("{COLOR=#389bc2}{WIND}The wizards magic ran wild!{ENDWIND}{CLEARCOLOR}\n{JOLT}They were forced to retreat!{ENDJOLT}\n{CROWD}Press '{RAINBOW}R{ENDRAINBOW}' to return.");
+            if (healthBar.level <= 0) {
+                messageLabel.setText("{COLOR=#389bc2}{WIND}The wizards magic ran wild!{ENDWIND}{CLEARCOLOR}\n{JOLT}They were forced to retreat!{ENDJOLT}\n{CROWD}{RAINBOW}click or touch{ENDRAINBOW} anywhere to return.");
+            }
         }
         manaBar.incrementPercentage(amount * 10);
         BaseGame.mana = manaBar.level;
@@ -116,7 +125,8 @@ public class LevelScreen extends BaseScreen {
         AssetLoader.gongSound.play(BaseGame.soundVolume);
         messageLabel.addAction(Actions.sequence(
             Actions.delay(1.0f),
-            Actions.fadeIn(5.0f)
+            Actions.fadeIn(1.0f),
+            Actions.run(() -> is_game_over = true)
         ));
     }
 
@@ -176,7 +186,7 @@ public class LevelScreen extends BaseScreen {
         manaBar.setProgressBarColor(Color.valueOf("69f7ff"));
         manaBar.type = "mana";
 
-        messageLabel = new TypingLabel("{JOLT}They barely made it back!{ENDJOLT}\n{CROWD}Press '{RAINBOW}R{ENDRAINBOW}' to return.", AssetLoader.getLabelStyle("Play-Bold59white"));
+        messageLabel = new TypingLabel("{JOLT}They barely made it back!{ENDJOLT}\n{CROWD}{RAINBOW}click or touch{ENDRAINBOW} anywhere to return.", AssetLoader.getLabelStyle("Play-Bold59white"));
         messageLabel.getColor().a = 0.0f;
         messageLabel.setAlignment(Align.center);
 
@@ -214,5 +224,6 @@ public class LevelScreen extends BaseScreen {
         BaseGame.health = 100;
         BaseGame.mana = 0;
         BaseGame.setActiveScreen(new LevelScreen("up"));
+        is_game_over = false;
     }
 }
